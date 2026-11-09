@@ -1,0 +1,22 @@
+{
+  "name": "casekaaran",
+  "version": "1.0.0",
+  "description": "Casekaaran — Premium Mobile Phone Case E-Commerce Platform",
+  "main": "backend/server.js",
+  "scripts": {
+    "start": "node backend/server.js",
+    "build": "npm --prefix backend install",
+    "postinstall": "npm --prefix backend install",
+    "test": "npm --prefix backend test"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [
+    "casekaaran",
+    "ecommerce",
+    "mobile-cases"
+  ],
+  "author": "Casekaaran Engineering",
+  "license": "ISC"
+}
