@@ -364,12 +364,6 @@ const ProductCatalog = (function () {
         </div>
       `;
     }).join('');
-              </div>
-            </div>
-          </div>
-        </div>
-      `;
-    }).join('');
 
     // Trigger scroll reveal observer for newly inserted products
     if (typeof initScrollAnimations === 'function') {
