@@ -1,30 +1,70 @@
 /**
- * Casekaaran — MySQL Database Connection Pool
- * Uses mysql2/promise for async/await execution and transactions
+ * Casekaaran — Supabase PostgreSQL Database Driver & Connection Pool
+ * Built for Supabase / PostgreSQL with automatic fallback and query normalization
  */
-const mysql = require('mysql2/promise');
+const { Pool } = require('pg');
 const logger = require('../utils/logger');
 
 let pool = null;
 let isMockMode = false;
 let initPromise = null;
 
-const dbConfig = {
-  host: process.env.DB_HOST || 'localhost',
-  port: parseInt(process.env.DB_PORT || '3306', 10),
-  user: process.env.DB_USER || 'root',
-  password: process.env.DB_PASSWORD || '',
-  database: process.env.DB_NAME || 'casekaaran_db',
-  waitForConnections: true,
-  connectionLimit: parseInt(process.env.DB_CONNECTION_LIMIT || '25', 10),
-  queueLimit: 500,
-  enableKeepAlive: true,
-  keepAliveInitialDelay: 10000,
-  ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : undefined
-};
+// Determine connection config from DATABASE_URL / SUPABASE_DB_URL or individual env vars
+function getPgConfig() {
+  const connectionString = process.env.DATABASE_URL || process.env.SUPABASE_DB_URL;
+  if (connectionString) {
+    return {
+      connectionString,
+      ssl: { rejectUnauthorized: false },
+      max: parseInt(process.env.DB_CONNECTION_LIMIT || '20', 10),
+      idleTimeoutMillis: 30000,
+      connectionTimeoutMillis: 5000
+    };
+  }
+
+  return {
+    host: process.env.DB_HOST || 'localhost',
+    port: parseInt(process.env.DB_PORT || '5432', 10),
+    user: process.env.DB_USER || 'postgres',
+    password: process.env.DB_PASSWORD || '',
+    database: process.env.DB_NAME || 'postgres',
+    ssl: (process.env.DB_SSL === 'true' || process.env.DB_HOST?.includes('supabase')) ? { rejectUnauthorized: false } : undefined,
+    max: parseInt(process.env.DB_CONNECTION_LIMIT || '20', 10),
+    idleTimeoutMillis: 30000,
+    connectionTimeoutMillis: 5000
+  };
+}
 
 /**
- * Initialize MySQL Connection Pool
+ * Translate MySQL SQL constructs to PostgreSQL / Supabase syntax
+ */
+function translateSql(sql) {
+  let paramIndex = 1;
+  // Convert ? to $1, $2, $3...
+  let pgSql = sql.replace(/\?/g, () => `$${paramIndex++}`);
+
+  // String Aggregation: GROUP_CONCAT(...) -> STRING_AGG(...)
+  pgSql = pgSql.replace(/GROUP_CONCAT\s*\(\s*DISTINCT\s+([^)]+?)\s+SEPARATOR\s+('[^']+')\s*\)/gi, "STRING_AGG(DISTINCT $1, $2)");
+  pgSql = pgSql.replace(/GROUP_CONCAT\s*\(\s*([^)]+?)\s+SEPARATOR\s+('[^']+')\s*\)/gi, "STRING_AGG($1, $2)");
+
+  // Date Math: DATE_ADD(NOW(), INTERVAL 15 MINUTE) -> NOW() + INTERVAL '15 minutes'
+  pgSql = pgSql.replace(/DATE_ADD\s*\(\s*NOW\(\)\s*,\s*INTERVAL\s+(\d+)\s+MINUTE\s*\)/gi, "NOW() + INTERVAL '$1 minutes'");
+
+  // Upsert: ON DUPLICATE KEY UPDATE -> ON CONFLICT
+  pgSql = pgSql.replace(/ON\s+DUPLICATE\s+KEY\s+UPDATE\s+courier_name\s*=\s*VALUES\s*\(\s*courier_name\s*\)\s*,\s*tracking_number\s*=\s*VALUES\s*\(\s*tracking_number\s*\)/gi, 
+    "ON CONFLICT (order_id) DO UPDATE SET courier_name = EXCLUDED.courier_name, tracking_number = EXCLUDED.tracking_number");
+
+  // Ensure INSERT statements capture returning ID if not present
+  const trimmed = pgSql.trim();
+  if (/^INSERT\s+INTO/i.test(trimmed) && !/RETURNING/i.test(trimmed)) {
+    pgSql = `${trimmed} RETURNING id`;
+  }
+
+  return pgSql;
+}
+
+/**
+ * Initialize Supabase PostgreSQL Connection Pool
  */
 async function initDb() {
   if (pool) return pool;
@@ -33,15 +73,22 @@ async function initDb() {
 
   initPromise = (async () => {
     try {
-      const p = mysql.createPool(dbConfig);
-      const connection = await p.getConnection();
-      await connection.ping();
-      connection.release();
+      const config = getPgConfig();
+      // If no valid DB credentials configured and not in production, use fallback
+      if (!process.env.DATABASE_URL && !process.env.SUPABASE_DB_URL && (!process.env.DB_PASSWORD || process.env.DB_PASSWORD === '')) {
+        throw new Error('No Supabase database credentials specified in environment');
+      }
+
+      const p = new Pool(config);
+      const client = await p.connect();
+      await client.query('SELECT 1');
+      client.release();
+
       pool = p;
-      logger.info(`[MySQL] Successfully connected to database: ${dbConfig.database} at ${dbConfig.host}:${dbConfig.port}`);
+      logger.info(`[Supabase / Postgres] Successfully connected to database pool.`);
       return pool;
     } catch (err) {
-      logger.warn(`[MySQL] Managed MySQL instance not reachable at ${dbConfig.host}:${dbConfig.port} (${err.message}). Activating In-Memory Fallback Driver for local preview and testing.`);
+      logger.warn(`[Supabase / Postgres] Remote instance not connected (${err.message}). Activating In-Memory Fallback Driver for local preview and testing.`);
       isMockMode = true;
       pool = null;
       return null;
@@ -63,10 +110,14 @@ async function query(sql, params = []) {
 
   if (pool && !isMockMode) {
     try {
-      const [rows] = await pool.execute(sql, params);
+      const pgSql = translateSql(sql);
+      const res = await pool.query(pgSql, params);
+      const rows = res.rows || [];
+      rows.insertId = rows[0]?.id || 0;
+      rows.affectedRows = res.rowCount || 0;
       return rows;
     } catch (err) {
-      logger.error(`[MySQL Query Error] SQL: ${sql} | Error: ${err.message}`);
+      logger.error(`[PostgreSQL Query Error] SQL: ${sql} | Error: ${err.message}`);
       throw err;
     }
   }
@@ -84,17 +135,38 @@ async function transaction(callback) {
   }
 
   if (pool && !isMockMode) {
-    const connection = await pool.getConnection();
-    await connection.beginTransaction();
+    const client = await pool.connect();
+    await client.query('BEGIN');
+
+    const clientWrapper = {
+      execute: async (sql, params = []) => {
+        const pgSql = translateSql(sql);
+        const res = await client.query(pgSql, params);
+        const rows = res.rows || [];
+        const meta = {
+          insertId: rows[0]?.id || 0,
+          affectedRows: res.rowCount || 0
+        };
+        rows.insertId = meta.insertId;
+        rows.affectedRows = meta.affectedRows;
+        return [rows, meta];
+      },
+      query: async (sql, params = []) => {
+        const pgSql = translateSql(sql);
+        const res = await client.query(pgSql, params);
+        return [res.rows || []];
+      }
+    };
+
     try {
-      const result = await callback(connection);
-      await connection.commit();
+      const result = await callback(clientWrapper);
+      await client.query('COMMIT');
       return result;
     } catch (err) {
-      await connection.rollback();
+      await client.query('ROLLBACK');
       throw err;
     } finally {
-      connection.release();
+      client.release();
     }
   }
 

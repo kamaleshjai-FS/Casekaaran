@@ -14,6 +14,8 @@ services:
         generateValue: true
       - key: CASHFREE_ENVIRONMENT
         value: PRODUCTION
+      - key: DATABASE_URL
+        sync: false
       - key: DB_HOST
         sync: false
       - key: DB_USER
@@ -21,7 +23,7 @@ services:
       - key: DB_PASSWORD
         sync: false
       - key: DB_NAME
-        value: casekaaran_db
+        value: postgres
       - key: CASHFREE_APP_ID
         sync: false
       - key: CASHFREE_SECRET_KEY

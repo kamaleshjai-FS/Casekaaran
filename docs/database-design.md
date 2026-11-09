@@ -1,6 +1,6 @@
 # Casekaaran — Database Design & Schema Documentation
 
-The database is built on **MySQL 8.0** using the **InnoDB** storage engine with strict relational constraints, explicit indexes, and UTF-8 multi-byte (`utf8mb4_unicode_ci`) encoding.
+The database is built on **Supabase / PostgreSQL 15+** with strict relational constraints, explicit indexes, JSONB column support, and UTC timestamp triggers (`backend/database/supabase_schema.sql`). It also maintains full backward compatibility with MySQL 8.0 and an In-Memory mock fallback driver.
 
 ## Table Inventory (27 Normalized Tables)
 
