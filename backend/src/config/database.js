@@ -137,7 +137,7 @@ const mockStore = {
       original_price: '999.00',
       is_featured: 1,
       is_active: 1,
-      image_url: 'https://images.unsplash.com/photo-1580910051074-3eb694886505?w=800&auto=format&fit=crop&q=80',
+      image_url: 'assets/images/product-aeroshield-magsafe.jpg',
       stock_quantity: 50
     },
     {
@@ -152,7 +152,7 @@ const mockStore = {
       original_price: '1199.00',
       is_featured: 1,
       is_active: 1,
-      image_url: 'https://images.unsplash.com/photo-1601593346740-925612772716?w=800&auto=format&fit=crop&q=80',
+      image_url: 'assets/images/product-titan-armor.jpg',
       stock_quantity: 35
     },
     {
@@ -167,7 +167,7 @@ const mockStore = {
       original_price: '799.00',
       is_featured: 1,
       is_active: 1,
-      image_url: 'https://images.unsplash.com/photo-1541872703-74c5e44368f9?w=800&auto=format&fit=crop&q=80',
+      image_url: 'assets/images/product-silkytouch-silicone.jpg',
       stock_quantity: 60
     },
     {
@@ -182,7 +182,7 @@ const mockStore = {
       original_price: '1299.00',
       is_featured: 1,
       is_active: 1,
-      image_url: 'https://images.unsplash.com/photo-1586105251261-72a756497a11?w=800&auto=format&fit=crop&q=80',
+      image_url: 'assets/images/product-heritage-leather.jpg',
       stock_quantity: 25
     }
   ],

@@ -4,14 +4,27 @@
    ========================================================================== */
 
 /* ==========================================================================
-   HERO SECTION (EDITORIAL SPLIT COMPOSITION)
+   HERO SECTION (MIDNIGHT NAVY & SOFT GOLD LUXURY)
    ========================================================================== */
 .hero-section {
   position: relative;
-  background-color: var(--color-background);
-  padding: clamp(40px, 6vw, 80px) 0 clamp(48px, 8vw, 96px);
+  background: linear-gradient(145deg, var(--color-midnight-navy) 0%, var(--color-deep-charcoal) 100%);
+  color: var(--color-pure-white);
+  padding: clamp(48px, 7vw, 90px) 0 clamp(54px, 8vw, 105px);
   overflow: hidden;
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid rgba(208, 166, 107, 0.2);
+}
+
+.hero-section::before {
+  content: '';
+  position: absolute;
+  top: -20%;
+  right: -10%;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(208, 166, 107, 0.12) 0%, rgba(16, 27, 45, 0) 70%);
+  pointer-events: none;
+  z-index: 1;
 }
 
 .hero-eyebrow {
@@ -23,7 +36,7 @@
   font-weight: var(--fw-bold);
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  color: var(--color-primary);
+  color: var(--color-soft-gold);
   margin-bottom: var(--space-4);
   padding: 4px 0;
 }
@@ -33,23 +46,27 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background-color: var(--color-accent);
+  background-color: var(--color-soft-gold);
 }
 
 .hero-title {
   font-family: var(--font-display);
   font-size: var(--text-hero);
   font-weight: var(--fw-extrabold);
-  color: var(--color-primary);
+  color: var(--color-pure-white);
   line-height: 1.08;
   letter-spacing: -0.035em;
   margin-bottom: var(--space-5);
   max-width: 680px;
 }
 
+.hero-title .text-gold {
+  color: var(--color-soft-gold);
+}
+
 .hero-subtitle {
   font-size: var(--text-base);
-  color: var(--color-text-body);
+  color: #D2D9E8;
   max-width: 520px;
   margin-bottom: var(--space-8);
   line-height: 1.6;
@@ -61,6 +78,8 @@
   flex-wrap: wrap;
   gap: var(--space-4);
   margin-bottom: var(--space-10);
+  position: relative;
+  z-index: 2;
 }
 
 .hero-trust-stats {
@@ -68,7 +87,7 @@
   align-items: center;
   gap: var(--space-8);
   padding-top: var(--space-6);
-  border-top: 1px solid var(--color-border);
+  border-top: 1px solid rgba(233, 223, 208, 0.15);
 }
 
 .hero-stat-item {
@@ -76,19 +95,23 @@
   flex-direction: column;
 }
 
-.hero-stat-item strong {
+.hero-stat-item strong,
+.hero-stat-item h4 {
   font-family: var(--font-display);
   font-size: 1.35rem;
   font-weight: var(--fw-extrabold);
-  color: var(--color-primary);
+  color: var(--color-pure-white);
   line-height: 1.2;
+  margin: 0;
 }
 
-.hero-stat-item span {
+.hero-stat-item span,
+.hero-stat-item p {
   font-size: 0.75rem;
-  color: var(--color-text-muted);
+  color: #9BA5B7;
   text-transform: uppercase;
   letter-spacing: 0.05em;
+  margin: 4px 0 0;
 }
 
 /* Hero Visual Composition */
@@ -97,6 +120,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 2;
 }
 
 .hero-visual-frame {
@@ -105,9 +129,9 @@
   max-width: 540px;
   border-radius: var(--radius-xl);
   overflow: hidden;
-  background: var(--color-surface-soft);
-  box-shadow: 0 25px 60px -15px rgba(17, 19, 24, 0.12);
-  border: 1px solid var(--color-border);
+  background: #0E1624;
+  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(208, 166, 107, 0.3);
 }
 
 .hero-visual-frame img {
@@ -127,27 +151,36 @@
   bottom: 24px;
   left: 24px;
   right: 24px;
-  background: rgba(255, 255, 255, 0.94);
+  background: rgba(16, 27, 45, 0.92);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(208, 166, 107, 0.35);
   border-radius: var(--radius-md);
   padding: 12px 18px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
   z-index: 2;
 }
 
 .hero-floating-pill .pill-meta {
   font-size: 0.75rem;
   font-weight: var(--fw-bold);
-  color: var(--color-primary);
+  color: var(--color-pure-white);
   letter-spacing: -0.01em;
 }
 
 .hero-floating-pill .pill-badge {
+  font-size: 0.6875rem;
+  font-weight: var(--fw-bold);
+  color: var(--color-midnight-navy);
+  background: var(--color-soft-gold);
+  border: 1px solid var(--color-soft-gold);
+  padding: 3px 9px;
+  border-radius: var(--radius-full);
+  text-transform: uppercase;
+}
   font-size: 0.6875rem;
   font-weight: var(--fw-bold);
   color: var(--color-accent);
@@ -254,48 +287,61 @@
 }
 
 /* ==========================================================================
-   PRODUCT BENEFITS / TRUST SECTION
+   PRODUCT BENEFITS / TRUST SECTION (MIDNIGHT NAVY & SOFT GOLD)
    ========================================================================== */
 .trust-section {
-  background: var(--color-surface-soft);
-  padding: clamp(48px, 6vw, 80px) 0;
-  border-top: 1px solid var(--color-border);
-  border-bottom: 1px solid var(--color-border);
+  background: var(--color-midnight-navy);
+  color: var(--color-pure-white);
+  padding: clamp(54px, 7vw, 90px) 0;
+  border-top: 1px solid rgba(208, 166, 107, 0.25);
+  border-bottom: 1px solid rgba(208, 166, 107, 0.25);
 }
 
 .trust-card {
   display: flex;
   align-items: flex-start;
   gap: var(--space-4);
-  padding: var(--space-4) 0;
+  padding: var(--space-4);
+  background: rgba(25, 27, 34, 0.6);
+  border: 1px solid rgba(208, 166, 107, 0.2);
+  border-radius: var(--radius-lg);
+  height: 100%;
+  transition: all var(--transition-base);
+}
+
+.trust-card:hover {
+  background: rgba(25, 27, 34, 0.9);
+  border-color: var(--color-soft-gold);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
 }
 
 .trust-icon {
-  width: 44px;
-  height: 44px;
+  width: 48px;
+  height: 48px;
   border-radius: var(--radius-md);
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
+  background: rgba(208, 166, 107, 0.15);
+  border: 1px solid rgba(208, 166, 107, 0.4);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.35rem;
-  color: var(--color-primary);
+  font-size: 1.4rem;
+  color: var(--color-soft-gold);
   flex-shrink: 0;
 }
 
 .trust-title {
   font-family: var(--font-display);
-  font-size: 0.9375rem;
+  font-size: 1rem;
   font-weight: var(--fw-bold);
-  color: var(--color-primary);
-  margin-bottom: 4px;
+  color: var(--color-pure-white);
+  margin-bottom: 6px;
 }
 
 .trust-desc {
   font-size: 0.8125rem;
-  color: var(--color-text-muted);
-  line-height: 1.5;
+  color: #A4B0C4;
+  line-height: 1.55;
   margin: 0;
 }
 

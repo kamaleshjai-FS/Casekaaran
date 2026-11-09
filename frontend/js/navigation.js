@@ -29,9 +29,35 @@ document.addEventListener('DOMContentLoaded', () => {
   if (mobileCloseBtn) mobileCloseBtn.addEventListener('click', closeMobileNav);
   if (mobileNavBackdrop) mobileNavBackdrop.addEventListener('click', closeMobileNav);
 
-  // Close drawer on link click
-  document.querySelectorAll('.mobile-nav-item a').forEach(link => {
-    link.addEventListener('click', closeMobileNav);
+  // Mobile Dedicated Search Bar Toggle
+  const mobileSearchToggle = document.getElementById('mobile-search-toggle');
+  const mobileSearchBar = document.getElementById('mobile-search-bar');
+  const mobileSearchClose = document.getElementById('mobile-search-close');
+
+  if (mobileSearchToggle && mobileSearchBar) {
+    mobileSearchToggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      mobileSearchBar.classList.toggle('active');
+      if (mobileSearchBar.classList.contains('active')) {
+        const input = mobileSearchBar.querySelector('input');
+        if (input) input.focus();
+      }
+    });
+  }
+
+  if (mobileSearchClose && mobileSearchBar) {
+    mobileSearchClose.addEventListener('click', () => {
+      mobileSearchBar.classList.remove('active');
+    });
+  }
+
+  // Close search bar on click outside
+  document.addEventListener('click', (e) => {
+    if (mobileSearchBar && mobileSearchBar.classList.contains('active')) {
+      if (!mobileSearchBar.contains(e.target) && (!mobileSearchToggle || !mobileSearchToggle.contains(e.target))) {
+        mobileSearchBar.classList.remove('active');
+      }
+    }
   });
 
   // Escape key to close

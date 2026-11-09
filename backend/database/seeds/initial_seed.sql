@@ -99,11 +99,11 @@ ON DUPLICATE KEY UPDATE name=VALUES(name);
 
 -- 7. Product Images
 INSERT INTO product_images (product_id, image_url, alt_text, is_primary, display_order) VALUES
-(1, 'https://images.unsplash.com/photo-1580910051074-3eb694886505?w=800&auto=format&fit=crop&q=80', 'AeroShield MagSafe Front', TRUE, 1),
-(1, 'https://images.unsplash.com/photo-1601593346740-925612772716?w=800&auto=format&fit=crop&q=80', 'AeroShield MagSafe Angle', FALSE, 2),
-(2, 'https://images.unsplash.com/photo-1601593346740-925612772716?w=800&auto=format&fit=crop&q=80', 'Titan Armor Drop Defense', TRUE, 1),
-(3, 'https://images.unsplash.com/photo-1541872703-74c5e44368f9?w=800&auto=format&fit=crop&q=80', 'SilkyTouch Silicone', TRUE, 1),
-(4, 'https://images.unsplash.com/photo-1586105251261-72a756497a11?w=800&auto=format&fit=crop&q=80', 'Heritage Vegan Leather', TRUE, 1)
+(1, 'assets/images/product-aeroshield-magsafe.jpg', 'AeroShield MagSafe Front', TRUE, 1),
+(1, 'assets/images/hero-case-luxury.jpg', 'AeroShield MagSafe Angle', FALSE, 2),
+(2, 'assets/images/product-titan-armor.jpg', 'Titan Armor Drop Defense', TRUE, 1),
+(3, 'assets/images/product-silkytouch-silicone.jpg', 'SilkyTouch Silicone', TRUE, 1),
+(4, 'assets/images/product-heritage-leather.jpg', 'Heritage Vegan Leather', TRUE, 1)
 ON DUPLICATE KEY UPDATE product_id=VALUES(product_id);
 
 -- 8. Product Model Compatibility Mappings

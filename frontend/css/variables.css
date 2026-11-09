@@ -4,28 +4,45 @@
    ========================================================================== */
 
 :root {
-  /* Brand Colour Palette */
-  --color-primary: #111318;        /* Deep Carbon Obsidian */
-  --color-primary-hover: #1c2027;  /* Slightly elevated charcoal */
-  --color-secondary: #272B33;      /* Refined Graphite */
-  --color-background: #FFFFFF;     /* Crisp Pure White */
-  --color-surface-soft: #F6F6F4;   /* Warm Editorial Bone / Off-white */
+  /* Coordinated Luxury Brand Palette */
+  --color-midnight-navy: #101B2D;
+  --color-deep-charcoal: #191B22;
+  --color-warm-champagne: #E9DFD0;
+  --color-ivory-cream: #F5F0E8;
+  --color-deep-burgundy: #492D3B;
+  --color-soft-gold: #D0A66B;
+  --color-sage-mist: #DCE8E5;
+  --color-pure-white: #FFFFFF;
+  --color-muted-text: #77736F;
+
+  /* Semantic Theme Mappings */
+  --color-primary: #101B2D;        /* Midnight Navy */
+  --color-primary-hover: #191B22;  /* Deep Charcoal */
+  --color-secondary: #191B22;      /* Deep Charcoal */
+  --color-background: #FFFFFF;     /* Pure White */
+  --color-surface-soft: #F5F0E8;   /* Ivory Cream */
   --color-surface: #FFFFFF;        /* Card & Container Surface */
   --color-surface-elevated: #FFFFFF;
-  --color-surface-hover: #F0F0ED;  /* Interactive hover neutral */
+  --color-surface-hover: #E9DFD0;  /* Warm Champagne hover */
   
   /* Hairline Borders & Dividers */
-  --color-border: #E8E8E5;         /* Subtle 1px architectural divider */
-  --color-border-subtle: #F0F0ED;  /* Very soft divider */
-  --color-border-strong: #D4D4D0;  /* Input borders & interactive controls */
-  --color-border-focus: #111318;   /* Confident obsidian focus ring */
+  --color-border: #E8E2D8;         /* Subtle warm champagne divider */
+  --color-border-subtle: #F0EAE0;  /* Very soft divider */
+  --color-border-strong: #D5CBBC;  /* Input borders & interactive controls */
+  --color-border-focus: #101B2D;   /* Midnight navy focus ring */
 
   /* Functional Accents */
-  --color-accent: #C6A46A;         /* Champagne Bronze / Warm Gold (Used Sparingly) */
-  --color-accent-hover: #B59357;   /* Deeper gold hover */
-  --color-accent-subtle: #FBF8F2;  /* Soft tinted champagne background */
-  --color-accent-border: #EBDDC2;  /* Delicate bronze border */
+  --color-accent: #D0A66B;         /* Soft Gold */
+  --color-accent-hover: #BA9054;   /* Deeper gold hover */
+  --color-accent-subtle: #FBF7EE;  /* Soft tinted champagne background */
+  --color-accent-border: #E8D3B2;  /* Delicate bronze border */
   
+  --color-burgundy: #492D3B;
+  --color-burgundy-subtle: #F5EDF1;
+  --color-sage: #DCE8E5;
+  --color-sage-subtle: #F2F7F6;
+  --color-champagne: #E9DFD0;
+
   --color-success: #26845B;        /* Forest Emerald for verified/paid/in-stock */
   --color-success-subtle: #EDF7F2;
   --color-success-border: #C3E6D5;
@@ -39,10 +56,10 @@
   --color-warning-border: #FCD9B3;
 
   /* Typography Colors */
-  --color-text-main: #111318;      /* High contrast primary text (WCAG AAA) */
-  --color-text-body: #272B33;      /* Secondary editorial reading text */
-  --color-text-muted: #777B83;     /* Captions, labels, timestamps */
-  --color-text-light: #A3A7AF;     /* Inactive placeholders */
+  --color-text-main: #101B2D;      /* Midnight Navy */
+  --color-text-body: #191B22;      /* Deep Charcoal reading text */
+  --color-text-muted: #77736F;     /* Muted Text */
+  --color-text-light: #A5A19C;     /* Inactive placeholders */
   --color-text-white: #FFFFFF;
 
   /* Typography Families */

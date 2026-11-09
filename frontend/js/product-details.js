@@ -28,9 +28,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         description: 'Engineered specifically for extreme drop protection with an integrated N52 Neodymium MagSafe magnetic ring. Tested up to 12ft military-grade drops with raised 1.2mm camera bezels to prevent scratches.',
         case_type: 'MagSafe Matte',
         images: [
-          'https://images.unsplash.com/photo-1580910051074-3eb694886505?w=1000&auto=format&fit=crop&q=85',
-          'https://images.unsplash.com/photo-1601593346740-925612772716?w=1000&auto=format&fit=crop&q=85',
-          'https://images.unsplash.com/photo-1541872703-74c5e44368f9?w=1000&auto=format&fit=crop&q=85'
+          'assets/images/product-aeroshield-magsafe.jpg',
+          'assets/images/hero-case-luxury.jpg',
+          'assets/images/product-titan-armor.jpg'
         ],
         compatible_models: [
           { id: 101, name: 'iPhone 16 Pro Max' },
