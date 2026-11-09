@@ -181,10 +181,32 @@ const Trending3DExperience = (function () {
     if (!container) return;
 
     const registry = getRegistry();
-    if (!registry || !registry.cases3D) return;
+    if (!registry) return;
 
-    // Strict in-stock filtering
-    const inStockCases = registry.cases3D.filter(c => c.in_stock && c.stock_quantity > 0);
+    let targetCases = [];
+    if (activeModel && registry.allProducts) {
+      // Find model specific demo cases
+      const specific = registry.allProducts.filter(p => 
+        p.phone_model_id === activeModel.id || 
+        p.phone_model_slug === activeModel.slug ||
+        (p.name && p.name.toLowerCase().includes(activeModel.name.toLowerCase()))
+      );
+      if (specific.length > 0) {
+        targetCases = specific;
+      }
+    }
+
+    // Fallback to cases3D or all 3D cases if none specific
+    if (targetCases.length === 0) {
+      if (registry.cases3D && registry.cases3D.length > 0) {
+        targetCases = registry.cases3D;
+      } else if (registry.allProducts) {
+        targetCases = registry.allProducts.filter(p => p.case_type_slug === '3d-case' || p.case_type_slug === 'clear-hybrid' || p.case_type_slug === 'rugged');
+      }
+    }
+
+    // Strict in-stock filtering (stock_quantity > 0)
+    const inStockCases = targetCases.filter(c => (c.stock_quantity === undefined || c.stock_quantity > 0));
 
     if (inStockCases.length === 0) {
       container.innerHTML = `
@@ -197,48 +219,56 @@ const Trending3DExperience = (function () {
 
     container.innerHTML = inStockCases.map(item => {
       const discountPct = Math.round(((item.original_price - item.base_price) / item.original_price) * 100);
-      const modelDisplayName = activeModel ? activeModel.name : 'Selected Phone';
+      const modelDisplayName = activeModel ? activeModel.name : (item.phone_model_name || 'Selected Phone');
 
       return `
-        <div class="col-lg-6">
-          <div class="trending-3d-card h-100">
+        <div class="col-lg-4 col-md-6 mb-4">
+          <div class="trending-3d-card h-100 d-flex flex-column">
             <div class="trending-3d-img-container">
               <div class="trending-3d-badge-bar">
-                <span class="badge-3d-series">⚡ NEW TRENDING 3D</span>
+                <span class="badge-3d-series">${item.case_type || '3D ATELIER'}</span>
                 <span class="badge-3d-stock">
                   <span class="pulse-dot-green"></span> In Stock (${item.stock_quantity})
                 </span>
               </div>
-              <img id="img-case-${item.id}" src="${item.primary_image}" alt="${item.name}" loading="lazy" />
+              <img id="img-case-${item.id}" src="${item.image_url || item.primary_image}" alt="${item.name}" loading="lazy" />
               <button class="trending-3d-ref-trigger" onclick="Trending3DExperience.openReferenceModal(${item.id})">
                 <i class="bi bi-eye"></i> View Reference Detail
               </button>
             </div>
 
-            <div class="trending-3d-content">
-              <h4 class="trending-3d-title">${item.name}</h4>
-              <p class="trending-3d-material"><i class="bi bi-layers me-1 text-gold"></i> ${item.material}</p>
+            <div class="trending-3d-content d-flex flex-column flex-grow-1 p-3">
+              <span class="badge bg-dark border border-secondary mb-2 align-self-start text-gold" style="font-size: 0.75rem;">
+                <i class="bi bi-phone me-1"></i> Compatible: ${modelDisplayName}
+              </span>
+              <h5 class="trending-3d-title mb-1">${item.name}</h5>
+              <p class="trending-3d-material mb-2"><i class="bi bi-layers me-1 text-gold"></i> ${item.material}</p>
               
-              <div class="trending-3d-features-list">
-                ${(item.features || []).map(f => `<span class="feature-pill-dark">${f}</span>`).join('')}
+              <div class="trending-3d-features-list mb-3">
+                ${(item.features || []).slice(0, 3).map(f => `<span class="feature-pill-dark">${f}</span>`).join('')}
               </div>
 
-              <div class="trending-3d-price-row">
+              <div class="trending-3d-price-row mb-3 mt-auto">
                 <span class="price-current-3d">₹${item.base_price}</span>
                 <span class="price-orig-3d">₹${item.original_price}</span>
                 <span class="price-discount-3d">-${discountPct}% OFF</span>
               </div>
 
-              <div class="mt-auto">
+              <div class="d-grid gap-2">
+                <a href="product-details.html?slug=${item.slug}" class="btn btn-outline-light btn-sm rounded-pill text-center text-decoration-none">
+                  <i class="bi bi-info-circle me-1"></i> View Details
+                </a>
                 <button class="btn-add-3d-cart" onclick="Trending3DExperience.addToCart(${item.id})">
-                  <i class="bi bi-bag-plus-fill"></i>
-                  <span>Add for ${modelDisplayName}</span>
+                  <i class="bi bi-bag-plus-fill me-1"></i> Add to Cart
                 </button>
-                <div class="text-center mt-2">
-                  <span class="text-white-50" style="font-size: 0.75rem;">
-                    <i class="bi bi-shield-check text-success"></i> 100% Camera & Button Fit Guaranteed
-                  </span>
-                </div>
+                <button class="btn btn-warning btn-sm fw-bold rounded-pill text-dark" onclick="Trending3DExperience.buyNow(${item.id})">
+                  <i class="bi bi-lightning-fill me-1"></i> Buy Now
+                </button>
+              </div>
+              <div class="text-center mt-2">
+                <span class="text-white-50" style="font-size: 0.75rem;">
+                  <i class="bi bi-shield-check text-success"></i> 100% Camera & Button Fit Guaranteed
+                </span>
               </div>
             </div>
           </div>
@@ -297,35 +327,48 @@ const Trending3DExperience = (function () {
       if (typeof API !== 'undefined' && API.toast) {
         API.toast('Select Model', 'Please select your exact phone model first', 'error');
       }
-      return;
+      return false;
     }
 
-    const item = registry.cases3D.find(c => c.id === caseId);
-    if (!item) return;
+    const item = (registry.allProducts && registry.allProducts.find(c => c.id === caseId)) || 
+                 (registry.cases3D && registry.cases3D.find(c => c.id === caseId));
+    if (!item) return false;
 
     // Strict in-stock validation
-    if (!item.in_stock || item.stock_quantity <= 0) {
+    if (item.stock_quantity !== undefined && item.stock_quantity <= 0) {
       if (typeof API !== 'undefined' && API.toast) {
         API.toast('Out of Stock', 'This case is currently out of stock for the selected phone', 'error');
       }
-      return;
+      return false;
     }
 
     if (typeof Cart !== 'undefined' && Cart.addItem) {
       Cart.addItem({
         product_id: item.id,
-        variant_id: item.id,
+        variant_id: item.variant_id || item.id,
         product_name: item.name,
         phone_model_id: activeModel.id,
         phone_model_name: activeModel.name,
-        colour_name: '3D Ferrari Scuderia / Tactile Honeycomb',
-        price: item.base_price,
-        original_price: item.original_price,
-        image_url: item.primary_image,
+        colour_name: 'Midnight Black',
+        price: Number(item.base_price),
+        original_price: Number(item.original_price || item.base_price),
+        image_url: item.image_url || item.primary_image,
         quantity: 1
       });
+      return true;
     } else {
       console.log('Added to cart:', item.name, 'for', activeModel.name);
+      return true;
+    }
+  }
+
+  /**
+   * Buy Now with selected model
+   */
+  function buyNow(caseId) {
+    const added = addToCart(caseId);
+    if (added !== false) {
+      window.location.href = 'checkout.html';
     }
   }
 
@@ -402,8 +445,9 @@ const Trending3DExperience = (function () {
    */
   function openReferenceModal(caseId) {
     const registry = getRegistry();
-    const item = registry && registry.cases3D ? registry.cases3D.find(c => c.id === caseId) : null;
-    const realImg = item ? item.real_photo : 'assets/icons/reference-3d-case.jpeg';
+    const item = (registry && registry.allProducts && registry.allProducts.find(c => c.id === caseId)) || 
+                 (registry && registry.cases3D ? registry.cases3D.find(c => c.id === caseId) : null);
+    const realImg = item && item.real_photo ? item.real_photo : 'assets/icons/reference-3d-case.jpeg';
     const caseName = item ? item.name : '3D Tactile Case';
 
     let modal = document.getElementById('reference-photo-modal');
@@ -464,6 +508,7 @@ const Trending3DExperience = (function () {
     selectBrand,
     selectModel,
     addToCart,
+    buyNow,
     clearSearch,
     openReferenceModal,
     getActiveModel: () => activeModel,

@@ -84,6 +84,26 @@ const ProductCatalog = (function () {
     const registry = window.PHONE_MODELS_DATA;
     let list = (registry && registry.allProducts) ? [...registry.allProducts] : [];
 
+    // Filter by model ID or slug
+    if (filters.phone_model_id || filters.model) {
+      const target = String(filters.phone_model_id || filters.model).toLowerCase();
+      list = list.filter(p => {
+        if (p.phone_model_id && String(p.phone_model_id) === target) return true;
+        if (p.phone_model_slug && p.phone_model_slug.toLowerCase() === target) return true;
+        if (p.phone_model_name && p.phone_model_name.toLowerCase().includes(target)) return true;
+        if (p.compatible_models && Array.isArray(p.compatible_models) && p.compatible_models.some(m => m.toLowerCase().includes(target))) return true;
+        // Universal 3D cases (Scuderia & Black Panther) match all phone models
+        if (p.id === 5 || p.id === 6) return true;
+        return false;
+      });
+    }
+
+    // Filter by brand
+    if (filters.brand) {
+      const b = filters.brand.toLowerCase();
+      list = list.filter(p => !p.brand_slug || p.brand_slug.toLowerCase() === b || p.id === 5 || p.id === 6);
+    }
+
     // Filter by case type
     if (filters.case_type) {
       const ct = filters.case_type.toLowerCase();
@@ -93,7 +113,7 @@ const ProductCatalog = (function () {
     // Filter by search query
     if (filters.search) {
       const q = filters.search.toLowerCase();
-      list = list.filter(p => p.name.toLowerCase().includes(q) || (p.material && p.material.toLowerCase().includes(q)));
+      list = list.filter(p => p.name.toLowerCase().includes(q) || (p.material && p.material.toLowerCase().includes(q)) || (p.phone_model_name && p.phone_model_name.toLowerCase().includes(q)));
     }
 
     // Sort order
@@ -122,6 +142,7 @@ const ProductCatalog = (function () {
       let query = new URLSearchParams();
       if (filters.brand) query.append('brand', filters.brand);
       if (filters.model) query.append('model', filters.model);
+      if (filters.phone_model_id) query.append('phone_model_id', filters.phone_model_id);
       if (filters.case_type) query.append('case_type', filters.case_type);
       if (filters.sort) query.append('sort', filters.sort);
       if (filters.search) query.append('search', filters.search);
@@ -250,29 +271,52 @@ const ProductCatalog = (function () {
         ? Math.round(((p.original_price - p.base_price) / p.original_price) * 100) 
         : 0;
 
+      const compatibleLabel = p.phone_model_name 
+        ? `Compatible: ${p.phone_model_name}` 
+        : (Array.isArray(p.compatible_models) && p.compatible_models.length 
+            ? `Compatible: ${p.compatible_models[0]}` 
+            : (p.case_type || 'Custom Fit'));
+
       return `
         <div class="col reveal-item stagger-${(idx % 4) + 1}">
-          <div class="product-card">
+          <div class="product-card h-100 d-flex flex-column">
             <div class="product-image-wrap">
               <div class="badge-stack">
                 ${discountPct > 0 ? `<span class="discount-badge">-${discountPct}%</span>` : ''}
-                <span class="stock-tag in-stock"><i class="bi bi-check2"></i> ${I18n.t('product.inStock')}</span>
+                <span class="stock-tag in-stock"><i class="bi bi-check2"></i> ${I18n.t('product.inStock')} (${p.stock_quantity || 25})</span>
               </div>
               <a href="product-details.html?slug=${p.slug}">
                 <img src="${p.image_url}" alt="${p.name}" loading="lazy" />
               </a>
             </div>
-            <div class="product-content">
-              <span class="product-model-label">${p.case_type || 'Engineered Case'}</span>
+            <div class="product-content d-flex flex-column flex-grow-1">
+              <span class="product-model-label" style="font-size: 0.75rem; color: var(--color-soft-gold);">
+                <i class="bi bi-shield-check me-1"></i>${compatibleLabel}
+              </span>
               <a href="product-details.html?slug=${p.slug}" class="product-title" title="${p.name}">${p.name}</a>
-              <div class="product-price-row">
+              <div class="product-price-row mb-2">
                 <span class="current-price">${CONFIG.CURRENCY_SYMBOL}${p.base_price}</span>
                 ${p.original_price > p.base_price ? `<span class="original-price">${CONFIG.CURRENCY_SYMBOL}${p.original_price}</span>` : ''}
                 ${discountPct > 0 ? `<span class="save-percent">${discountPct}% off</span>` : ''}
               </div>
-              <a href="product-details.html?slug=${p.slug}" class="btn-ck btn-ck-secondary btn-ck-sm btn-block">
-                <span>${I18n.t('product.viewDetails')}</span> <i class="bi bi-arrow-right"></i>
-              </a>
+              
+              <div class="mt-auto d-grid gap-2 pt-2">
+                <a href="product-details.html?slug=${p.slug}" class="btn-ck btn-ck-secondary btn-ck-sm text-center">
+                  <span>${I18n.t('product.viewDetails')}</span> <i class="bi bi-arrow-right"></i>
+                </a>
+                <div class="row g-2">
+                  <div class="col-6">
+                    <button class="btn-ck btn-ck-outline btn-ck-sm w-100" onclick="ProductCatalog.addToCart(${p.id})">
+                      <i class="bi bi-bag-plus"></i> Add
+                    </button>
+                  </div>
+                  <div class="col-6">
+                    <button class="btn-ck btn-ck-primary btn-ck-sm w-100" onclick="ProductCatalog.buyNow(${p.id})">
+                      <i class="bi bi-lightning-fill"></i> Buy Now
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -283,6 +327,58 @@ const ProductCatalog = (function () {
     if (typeof initScrollAnimations === 'function') {
       initScrollAnimations();
     }
+  }
+
+  function addToCart(productId) {
+    const p = state.products.find(x => x.id === productId);
+    if (!p) return false;
+
+    const mId = p.phone_model_id || (state.selectedModel ? getModelIdFromSlug(state.selectedModel) : 120);
+    const mName = p.phone_model_name || getModelNameFromId(mId) || 'Selected Smartphone';
+
+    if (typeof Cart !== 'undefined' && Cart.addItem) {
+      Cart.addItem({
+        product_id: p.id,
+        variant_id: p.variant_id || p.id,
+        product_name: p.name,
+        phone_model_id: mId,
+        phone_model_name: mName,
+        colour_name: 'Midnight Black',
+        price: Number(p.base_price),
+        original_price: Number(p.original_price || p.base_price),
+        image_url: p.image_url,
+        quantity: 1
+      });
+      return true;
+    }
+    return false;
+  }
+
+  function buyNow(productId) {
+    const success = addToCart(productId);
+    if (success !== false) {
+      window.location.href = 'checkout.html';
+    }
+  }
+
+  function getModelIdFromSlug(slug) {
+    const registry = window.PHONE_MODELS_DATA;
+    if (!registry || !registry.models) return 120;
+    for (const b in registry.models) {
+      const found = registry.models[b].find(m => m.slug === slug || String(m.id) === String(slug));
+      if (found) return found.id;
+    }
+    return 120;
+  }
+
+  function getModelNameFromId(id) {
+    const registry = window.PHONE_MODELS_DATA;
+    if (!registry || !registry.models) return 'Smartphone';
+    for (const b in registry.models) {
+      const found = registry.models[b].find(m => m.id === id);
+      if (found) return found.name;
+    }
+    return 'Smartphone';
   }
 
   function selectBrand(brandSlug) {
@@ -319,7 +415,9 @@ const ProductCatalog = (function () {
     loadBrands,
     loadModels,
     loadProducts,
-    selectBrand
+    selectBrand,
+    addToCart,
+    buyNow
   };
 })();
 

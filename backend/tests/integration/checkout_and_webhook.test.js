@@ -155,3 +155,40 @@ test('Integration Test - Products List contains in-stock 3D cases', async () => 
   assert.equal(case3D.base_price, 499);
   assert.ok(case3D.stock_quantity > 0);
 });
+
+test('Integration Test - Demo Products Filter by Phone Model ID & Slug (18 Demo Products)', async () => {
+  // Test Model 120 (S24 Ultra) by phone_model_id
+  const req120 = { query: { phone_model_id: 120 } };
+  const res120 = createMockRes();
+  await productController.getProducts(req120, res120, () => {});
+
+  assert.equal(res120.statusCode, 200);
+  assert.ok(res120.body.data.length >= 3);
+  const s24UltraSlugs = res120.body.data.map(p => p.slug);
+  assert.ok(s24UltraSlugs.includes('crystal-clear-3d-case-samsung-s24-ultra'));
+  assert.ok(s24UltraSlugs.includes('midnight-art-edition-samsung-s24-ultra'));
+  assert.ok(s24UltraSlugs.includes('premium-armor-case-samsung-s24-ultra'));
+
+  // Test Model 109 (Samsung A15/M15/F15) by model slug
+  const req109 = { query: { model: 'samsung-a15-m15-f15' } };
+  const res109 = createMockRes();
+  await productController.getProducts(req109, res109, () => {});
+
+  assert.equal(res109.statusCode, 200);
+  assert.ok(res109.body.data.length >= 3);
+  const clearCase = res109.body.data.find(p => p.slug === 'crystal-clear-3d-case-samsung-a15-m15-f15');
+  assert.ok(clearCase);
+  assert.equal(clearCase.base_price, 299);
+  assert.ok(clearCase.stock_quantity > 0);
+
+  // Test getProductBySlug for a demo product
+  const slugReq = { params: { slug: 'crystal-clear-3d-case-samsung-s24-ultra' } };
+  const slugRes = createMockRes();
+  await productController.getProductBySlug(slugReq, slugRes, () => {});
+
+  assert.equal(slugRes.statusCode, 200);
+  assert.equal(slugRes.body.data.base_price, 299);
+  assert.ok(slugRes.body.data.variants.some(v => v.sku.startsWith('DEMO-')));
+  assert.ok(slugRes.body.data.images.length > 0);
+});
+

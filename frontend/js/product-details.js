@@ -22,14 +22,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (res && res.success && res.data) {
       currentProduct = res.data;
       renderDetails(currentProduct);
-    } else if (window.PHONE_MODELS_DATA && window.PHONE_MODELS_DATA.cases3D) {
-      const match = window.PHONE_MODELS_DATA.cases3D.find(c => c.slug === slug);
+    } else if (window.PHONE_MODELS_DATA) {
+      const match = (window.PHONE_MODELS_DATA.allProducts && window.PHONE_MODELS_DATA.allProducts.find(c => c.slug === slug)) ||
+                    (window.PHONE_MODELS_DATA.cases3D && window.PHONE_MODELS_DATA.cases3D.find(c => c.slug === slug));
       if (match) {
-        const allModels = [
-          ...window.PHONE_MODELS_DATA.models.samsung,
-          ...window.PHONE_MODELS_DATA.models.redmi,
-          ...window.PHONE_MODELS_DATA.models.nothing
-        ];
+        const allModels = match.phone_model_name 
+          ? [{ id: match.phone_model_id, name: match.phone_model_name, slug: match.phone_model_slug }]
+          : [
+              ...window.PHONE_MODELS_DATA.models.samsung,
+              ...window.PHONE_MODELS_DATA.models.redmi,
+              ...window.PHONE_MODELS_DATA.models.nothing
+            ];
         currentProduct = {
           id: match.id,
           name: match.name,
@@ -37,15 +40,15 @@ document.addEventListener('DOMContentLoaded', async () => {
           base_price: match.base_price,
           original_price: match.original_price,
           material: match.material,
-          description: match.description,
-          case_type: match.series,
+          description: match.description || `${match.name} engineered with precision laser cutouts and reinforced shock defense.`,
+          case_type: match.case_type || match.series || '3D Case',
           images: [
-            match.primary_image,
-            match.angle_image,
-            match.real_photo
+            match.image_url || match.primary_image || 'assets/images/3d-cases/crystal-clear-3d-case.jpg',
+            match.angle_image || 'assets/images/3d-cases/trending-3d-ferrari-racing-angle.jpg',
+            match.real_photo || 'assets/icons/reference-3d-case.jpeg'
           ],
           compatible_models: allModels,
-          stock: match.stock_quantity
+          stock: match.stock_quantity || 30
         };
         renderDetails(currentProduct);
       } else {

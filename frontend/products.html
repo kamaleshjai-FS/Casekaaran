@@ -174,9 +174,9 @@
             </div>
 
             <!-- Brand Filter -->
-            <div class="mb-4">
+            <div class="mb-3">
               <label class="form-label-custom" data-i18n="product.filterBrand">Smartphone Brand</label>
-              <select id="filter-brand-select" class="form-select form-control-custom">
+              <select id="filter-brand-select" class="form-select form-control-custom" onchange="onBrandChange(this.value, 'filter-model-select')">
                 <option value="">All Brands</option>
                 <option value="samsung">Samsung</option>
                 <option value="redmi">Redmi</option>
@@ -186,6 +186,14 @@
                 <option value="google-pixel">Google Pixel</option>
                 <option value="xiaomi">Xiaomi</option>
                 <option value="motorola">Motorola</option>
+              </select>
+            </div>
+
+            <!-- Phone Model Filter -->
+            <div class="mb-4">
+              <label class="form-label-custom">Phone Model</label>
+              <select id="filter-model-select" class="form-select form-control-custom" onchange="applyCurrentFilters()">
+                <option value="">All Compatible Models</option>
               </select>
             </div>
 
@@ -241,9 +249,9 @@
       <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
     <div class="offcanvas-body">
-      <div class="mb-4">
+      <div class="mb-3">
         <label class="form-label-custom">Smartphone Brand</label>
-        <select id="filter-brand-mobile" class="form-select form-control-custom">
+        <select id="filter-brand-mobile" class="form-select form-control-custom" onchange="onBrandChange(this.value, 'filter-model-mobile')">
           <option value="">All Brands</option>
           <option value="samsung">Samsung</option>
           <option value="redmi">Redmi</option>
@@ -253,6 +261,13 @@
           <option value="google-pixel">Google Pixel</option>
           <option value="xiaomi">Xiaomi</option>
           <option value="motorola">Motorola</option>
+        </select>
+      </div>
+
+      <div class="mb-4">
+        <label class="form-label-custom">Phone Model</label>
+        <select id="filter-model-mobile" class="form-select form-control-custom" onchange="applyMobileFilters()">
+          <option value="">All Compatible Models</option>
         </select>
       </div>
 
@@ -293,6 +308,20 @@
     document.addEventListener('DOMContentLoaded', () => {
       ProductCatalog.init();
 
+      // Check URL parameters to pre-select brand and model dropdowns
+      const params = new URLSearchParams(window.location.search);
+      const urlBrand = params.get('brand');
+      const urlModel = params.get('model');
+
+      if (urlBrand) {
+        const brandSel = document.getElementById('filter-brand-select');
+        const mobileBrandSel = document.getElementById('filter-brand-mobile');
+        if (brandSel) brandSel.value = urlBrand;
+        if (mobileBrandSel) mobileBrandSel.value = urlBrand;
+        onBrandChange(urlBrand, 'filter-model-select', urlModel);
+        onBrandChange(urlBrand, 'filter-model-mobile', urlModel);
+      }
+
       const sortSelect = document.getElementById('catalog-sort');
       if (sortSelect) {
         sortSelect.addEventListener('change', () => {
@@ -301,23 +330,55 @@
       }
     });
 
+    function onBrandChange(brandSlug, targetSelectId, selectedModelSlug = null) {
+      const select = document.getElementById(targetSelectId);
+      if (!select) return;
+
+      if (!brandSlug) {
+        select.innerHTML = '<option value="">All Compatible Models</option>';
+        return;
+      }
+
+      const registry = window.PHONE_MODELS_DATA;
+      const models = registry && registry.models && registry.models[brandSlug] ? registry.models[brandSlug] : [];
+
+      select.innerHTML = '<option value="">All ' + (brandSlug.charAt(0).toUpperCase() + brandSlug.slice(1)) + ' Models</option>' +
+        models.map(m => `<option value="${m.slug}" data-id="${m.id}" ${selectedModelSlug === m.slug ? 'selected' : ''}>${m.name}</option>`).join('');
+
+      if (selectedModelSlug) {
+        select.value = selectedModelSlug;
+      }
+    }
+
     function applyCurrentFilters() {
       const brand = document.getElementById('filter-brand-select')?.value;
+      const model = document.getElementById('filter-model-select')?.value;
       const sort = document.getElementById('catalog-sort')?.value;
-      ProductCatalog.loadProducts({ brand, sort });
+      const checked = Array.from(document.querySelectorAll('.filter-casetype:checked')).map(cb => cb.value);
+      const case_type = checked.length > 0 ? checked[0] : null;
+      ProductCatalog.loadProducts({ brand, model, sort, case_type });
     }
 
     function applyMobileFilters() {
       const brand = document.getElementById('filter-brand-mobile')?.value;
+      const model = document.getElementById('filter-model-mobile')?.value;
       const sort = document.getElementById('catalog-sort')?.value;
-      ProductCatalog.loadProducts({ brand, sort });
+      const checked = Array.from(document.querySelectorAll('.filter-casetype-mobile:checked')).map(cb => cb.value);
+      const case_type = checked.length > 0 ? checked[0] : null;
+      ProductCatalog.loadProducts({ brand, model, sort, case_type });
     }
 
     function resetFilters() {
       const brandSelect = document.getElementById('filter-brand-select');
       const mobileBrand = document.getElementById('filter-brand-mobile');
+      const modelSelect = document.getElementById('filter-model-select');
+      const mobileModel = document.getElementById('filter-model-mobile');
+
       if (brandSelect) brandSelect.value = '';
       if (mobileBrand) mobileBrand.value = '';
+      if (modelSelect) modelSelect.innerHTML = '<option value="">All Compatible Models</option>';
+      if (mobileModel) mobileModel.innerHTML = '<option value="">All Compatible Models</option>';
+
       document.querySelectorAll('.filter-casetype, .filter-casetype-mobile').forEach(cb => cb.checked = false);
       ProductCatalog.loadProducts();
     }

@@ -684,7 +684,22 @@
       const selectedOpt = modelSelect ? modelSelect.selectedOptions[0] : null;
       const modelId = selectedOpt ? Number(selectedOpt.dataset.id) : null;
 
-      if (brand && ['samsung', 'redmi', 'nothing'].includes(brand) && window.Trending3DExperience) {
+      if (!brand) {
+        if (typeof API !== 'undefined' && API.toast) {
+          API.toast('Select Brand', 'Please pick your smartphone brand to continue', 'error');
+        } else {
+          alert('Please pick your smartphone brand to continue');
+        }
+        return;
+      }
+
+      // Update Catalog Product Grid
+      if (window.ProductCatalog && window.ProductCatalog.loadProducts) {
+        window.ProductCatalog.loadProducts({ brand, model, phone_model_id: modelId });
+      }
+
+      // Update 3D Atelier section
+      if (['samsung', 'redmi', 'nothing'].includes(brand) && window.Trending3DExperience) {
         Trending3DExperience.selectBrand(brand);
         if (modelId) {
           Trending3DExperience.selectModel(modelId);
@@ -698,10 +713,8 @@
 
       if (model) {
         window.location.href = `products.html?brand=${encodeURIComponent(brand)}&model=${encodeURIComponent(model)}`;
-      } else if (brand) {
-        window.location.href = `products.html?brand=${encodeURIComponent(brand)}`;
       } else {
-        API.toast('Select Brand', 'Please pick your smartphone brand to continue', 'error');
+        window.location.href = `products.html?brand=${encodeURIComponent(brand)}`;
       }
     }
   </script>
