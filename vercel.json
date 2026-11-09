@@ -2,7 +2,7 @@
   "version": 2,
   "outputDirectory": "frontend",
   "rewrites": [
-    { "source": "/api/(.*)", "destination": "https://casekaaran-backend.onrender.com/api/$1" }
+    { "source": "/api/(.*)", "destination": "https://casekaaran.onrender.com/api/$1" }
   ],
   "headers": [
     {
