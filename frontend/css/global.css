@@ -150,6 +150,17 @@ button, input, select, textarea {
   color: var(--color-primary);
 }
 
+.brand-logo-img {
+  width: 32px;
+  height: 32px;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+  display: inline-block;
+  flex-shrink: 0;
+  box-shadow: 0 2px 6px rgba(17, 19, 24, 0.08);
+  border: 1px solid rgba(198, 164, 106, 0.25);
+}
+
 .brand-logo .brand-dot {
   width: 6px;
   height: 6px;
