@@ -1,56 +1,73 @@
 /* ==========================================================================
-   CASEKAARAN — DESIGN SYSTEM TOKENS (CSS VARIABLES)
+   CASEKAARAN — DESIGN SYSTEM TOKENS (REDESIGN)
+   Editorial-Commerce Luxury Aesthetic
    ========================================================================== */
 
 :root {
   /* Brand Colour Palette */
-  --color-primary: #111827;        /* Deep slate/charcoal for primary actions & text */
-  --color-primary-hover: #1f2937;  /* Slightly lighter slate for hover states */
-  --color-secondary: #374151;      /* Mid-tone slate for secondary elements */
-  --color-background: #FFFFFF;     /* Clean pure white background */
-  --color-section-bg: #F8FAFC;     /* Subtle light grey-blue for alternate sections */
-  --color-surface: #FFFFFF;        /* Card & surface background */
-  --color-surface-hover: #F1F5F9;  /* Hover state for table rows & items */
+  --color-primary: #111318;        /* Deep Carbon Obsidian */
+  --color-primary-hover: #1c2027;  /* Slightly elevated charcoal */
+  --color-secondary: #272B33;      /* Refined Graphite */
+  --color-background: #FFFFFF;     /* Crisp Pure White */
+  --color-surface-soft: #F6F6F4;   /* Warm Editorial Bone / Off-white */
+  --color-surface: #FFFFFF;        /* Card & Container Surface */
+  --color-surface-elevated: #FFFFFF;
+  --color-surface-hover: #F0F0ED;  /* Interactive hover neutral */
   
-  /* Borders & Dividers */
-  --color-border-light: #E5E7EB;   /* 1px clean separation borders */
-  --color-border-strong: #D1D5DB;  /* Input borders & interactive controls */
-  --color-border-focus: #2563EB;   /* Input focus ring */
+  /* Hairline Borders & Dividers */
+  --color-border: #E8E8E5;         /* Subtle 1px architectural divider */
+  --color-border-subtle: #F0F0ED;  /* Very soft divider */
+  --color-border-strong: #D4D4D0;  /* Input borders & interactive controls */
+  --color-border-focus: #111318;   /* Confident obsidian focus ring */
 
   /* Functional Accents */
-  --color-accent: #2563EB;         /* Vibrant Royal Blue for links, primary CTA */
-  --color-accent-hover: #1D4ED8;   /* Darker blue hover */
-  --color-accent-subtle: #EFF6FF;  /* Light blue tinted badge backgrounds */
+  --color-accent: #C6A46A;         /* Champagne Bronze / Warm Gold (Used Sparingly) */
+  --color-accent-hover: #B59357;   /* Deeper gold hover */
+  --color-accent-subtle: #FBF8F2;  /* Soft tinted champagne background */
+  --color-accent-border: #EBDDC2;  /* Delicate bronze border */
   
-  --color-success: #16A34A;        /* Emerald green for in-stock, paid, confirmed */
-  --color-success-subtle: #ECFDF5; /* Green pill background */
-  --color-success-border: #BBF7D0;
+  --color-success: #26845B;        /* Forest Emerald for verified/paid/in-stock */
+  --color-success-subtle: #EDF7F2;
+  --color-success-border: #C3E6D5;
 
-  --color-discount: #DC2626;       /* Crimson red for discount badges, alerts */
-  --color-discount-subtle: #FEF2F2;/* Red pill background */
-  --color-discount-border: #FECACA;
+  --color-discount: #D94B45;       /* Editorial Crimson for discounts & urgent alerts */
+  --color-discount-subtle: #FDF2F2;
+  --color-discount-border: #F7D0CF;
 
-  --color-warning: #D97706;        /* Amber for pending payments, low stock */
-  --color-warning-subtle: #FFFBEB;
-  --color-warning-border: #FDE68A;
+  --color-warning: #C97A1E;        /* Warm Amber */
+  --color-warning-subtle: #FEF7ED;
+  --color-warning-border: #FCD9B3;
 
   /* Typography Colors */
-  --color-text-main: #111827;      /* High contrast primary text (WCAG AAA) */
-  --color-text-body: #374151;      /* Secondary reading text */
-  --color-text-muted: #6B7280;     /* Captions, labels, timestamps */
-  --color-text-light: #9CA3AF;     /* Inactive placeholders */
+  --color-text-main: #111318;      /* High contrast primary text (WCAG AAA) */
+  --color-text-body: #272B33;      /* Secondary editorial reading text */
+  --color-text-muted: #777B83;     /* Captions, labels, timestamps */
+  --color-text-light: #A3A7AF;     /* Inactive placeholders */
   --color-text-white: #FFFFFF;
 
   /* Typography Families */
-  --font-en: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-display: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-hi: 'Noto Sans Devanagari', 'Inter', -apple-system, sans-serif;
-  --font-family-current: var(--font-en);
+  --font-family-current: var(--font-body);
+
+  /* Fluid Editorial Typography Scale (using clamp) */
+  --text-xs: clamp(0.7rem, 0.65rem + 0.25vw, 0.75rem);      /* 11-12px */
+  --text-sm: clamp(0.8125rem, 0.78rem + 0.2vw, 0.875rem);   /* 13-14px */
+  --text-base: clamp(0.9375rem, 0.9rem + 0.2vw, 1rem);      /* 15-16px */
+  --text-lg: clamp(1.0625rem, 1rem + 0.35vw, 1.1875rem);    /* 17-19px */
+  --text-xl: clamp(1.25rem, 1.15rem + 0.5vw, 1.4rem);       /* 20-22.5px */
+  --text-2xl: clamp(1.5rem, 1.35rem + 0.8vw, 1.85rem);      /* 24-29.5px */
+  --text-3xl: clamp(1.85rem, 1.6rem + 1.25vw, 2.35rem);     /* 30-37.5px */
+  --text-4xl: clamp(2.35rem, 1.95rem + 2vw, 3.25rem);       /* 38-52px */
+  --text-hero: clamp(2.75rem, 2.2rem + 3vw, 4.5rem);        /* 44-72px */
 
   /* Font Weights */
   --fw-regular: 400;
   --fw-medium: 500;
   --fw-semibold: 600;
   --fw-bold: 700;
+  --fw-extrabold: 800;
 
   /* Spacing Scale (8px Grid System) */
   --space-1: 4px;
@@ -64,29 +81,35 @@
   --space-12: 48px;
   --space-16: 64px;
   --space-20: 80px;
+  --space-24: 96px;
 
-  /* Border Radiuses */
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 16px;
-  --radius-xl: 24px;
+  /* Architectural Radiuses (Delicate, modern curves) */
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --radius-xl: 26px;
   --radius-full: 9999px;
 
-  /* Box Shadows (Subtle, professional elevation) */
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
-  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+  /* Subtle, Natural Elevation Shadows */
+  --shadow-subtle: 0 1px 3px rgba(17, 19, 24, 0.04);
+  --shadow-sm: 0 2px 6px -1px rgba(17, 19, 24, 0.06), 0 1px 4px -1px rgba(17, 19, 24, 0.03);
+  --shadow-md: 0 10px 25px -4px rgba(17, 19, 24, 0.07), 0 4px 10px -3px rgba(17, 19, 24, 0.03);
+  --shadow-lg: 0 20px 35px -5px rgba(17, 19, 24, 0.09), 0 10px 15px -5px rgba(17, 19, 24, 0.04);
+  --shadow-hover: 0 18px 40px -8px rgba(17, 19, 24, 0.12), 0 6px 12px -4px rgba(17, 19, 24, 0.05);
 
   /* Layout Boundaries */
-  --max-width-content: 1240px;
-  --navbar-height: 72px;
-  --announcement-height: 38px;
+  --max-width-content: 1260px;
+  --max-width-wide: 1400px;
+  --navbar-height: 74px;
+  --announcement-height: 36px;
 
-  /* Transitions */
-  --transition-fast: 150ms ease-in-out;
-  --transition-base: 220ms ease-in-out;
-  --transition-slow: 350ms ease-in-out;
+  /* Motion & Physics Curves */
+  --ease-editorial: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-smooth: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --transition-fast: 180ms var(--ease-editorial);
+  --transition-base: 280ms var(--ease-editorial);
+  --transition-slow: 450ms var(--ease-editorial);
 }
 
 /* Hindi Mode Typography Override */
@@ -95,4 +118,14 @@ body.lang-hi {
   font-family: var(--font-family-current);
   letter-spacing: normal;
   line-height: 1.6;
+}
+
+body.lang-hi h1, 
+body.lang-hi h2, 
+body.lang-hi h3, 
+body.lang-hi h4, 
+body.lang-hi .brand-logo,
+body.lang-hi .hero-title,
+body.lang-hi .section-title {
+  font-family: var(--font-hi);
 }

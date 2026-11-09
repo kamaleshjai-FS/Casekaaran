@@ -156,36 +156,35 @@ const ProductCatalog = (function () {
 
     if (!state.products.length) {
       container.innerHTML = `
-        <div class="col-12 empty-state">
-          <div class="empty-state-icon"><i class="bi bi-box-seam"></i></div>
-          <h5>No compatible cases found</h5>
-          <p class="text-muted">Try choosing another phone model or resetting your filters.</p>
+        <div class="col-12 text-center py-5">
+          <div style="font-size: 2.5rem; color: var(--color-text-muted); margin-bottom: 12px;"><i class="bi bi-box-seam"></i></div>
+          <h5 class="fw-bold" style="font-family: var(--font-display);">No compatible cases found</h5>
+          <p class="text-muted" style="font-size: 0.875rem;">Try choosing another phone model or resetting your filters.</p>
+          <button class="btn-ck btn-ck-secondary btn-ck-sm mt-2" onclick="window.location.href='products.html'">Reset Filters</button>
         </div>
       `;
       return;
     }
 
-    container.innerHTML = state.products.map(p => {
+    container.innerHTML = state.products.map((p, idx) => {
       const discountPct = p.original_price > p.base_price 
         ? Math.round(((p.original_price - p.base_price) / p.original_price) * 100) 
         : 0;
-      
-      const compatibleLabel = p.compatible_models && p.compatible_models.length 
-        ? p.compatible_models[0] 
-        : 'All Supported Models';
 
       return `
-        <div class="col">
+        <div class="col reveal-item stagger-${(idx % 4) + 1}">
           <div class="product-card">
             <div class="product-image-wrap">
-              ${discountPct > 0 ? `<span class="discount-badge">${discountPct}% OFF</span>` : ''}
-              <span class="stock-tag in-stock"><i class="bi bi-check2"></i> ${I18n.t('product.inStock')}</span>
+              <div class="badge-stack">
+                ${discountPct > 0 ? `<span class="discount-badge">-${discountPct}%</span>` : ''}
+                <span class="stock-tag in-stock"><i class="bi bi-check2"></i> ${I18n.t('product.inStock')}</span>
+              </div>
               <a href="product-details.html?slug=${p.slug}">
                 <img src="${p.image_url}" alt="${p.name}" loading="lazy" />
               </a>
             </div>
             <div class="product-content">
-              <span class="product-model-label">${p.case_type || 'Protective Case'}</span>
+              <span class="product-model-label">${p.case_type || 'Engineered Case'}</span>
               <a href="product-details.html?slug=${p.slug}" class="product-title" title="${p.name}">${p.name}</a>
               <div class="product-price-row">
                 <span class="current-price">${CONFIG.CURRENCY_SYMBOL}${p.base_price}</span>
@@ -193,13 +192,18 @@ const ProductCatalog = (function () {
                 ${discountPct > 0 ? `<span class="save-percent">${discountPct}% off</span>` : ''}
               </div>
               <a href="product-details.html?slug=${p.slug}" class="btn-ck btn-ck-secondary btn-ck-sm btn-block">
-                <i class="bi bi-eye"></i> ${I18n.t('product.viewDetails')}
+                <span>${I18n.t('product.viewDetails')}</span> <i class="bi bi-arrow-right"></i>
               </a>
             </div>
           </div>
         </div>
       `;
     }).join('');
+
+    // Trigger scroll reveal observer for newly inserted products
+    if (typeof initScrollAnimations === 'function') {
+      initScrollAnimations();
+    }
   }
 
   function selectBrand(brandSlug) {

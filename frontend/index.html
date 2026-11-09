@@ -4,19 +4,19 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
   <title>Casekaaran — Engineered Cases for Your Exact Smartphone</title>
-  <meta name="description" content="India's premier online store exclusively for mobile phone cases. Precision fit shockproof, liquid silicone and leather cases for Apple, Samsung, OnePlus, Pixel and more.">
+  <meta name="description" content="India's dedicated luxury smartphone case atelier. Precision engineered drop protection, MagSafe matte, liquid silicone, and handcrafted leather cases for Apple, Samsung, OnePlus, Google Pixel, and more.">
   <link rel="icon" href="assets/icons/favicon.ico" type="image/x-icon">
 
-  <!-- Fonts: Inter (English) & Noto Sans Devanagari (Hindi) -->
+  <!-- Google Fonts: Manrope (Display Headings), Inter (UI Body), Noto Sans Devanagari (Hindi) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-  <!-- Bootstrap 5 & Bootstrap Icons -->
+  <!-- Bootstrap 5 Grid Utilities & Icons -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
 
-  <!-- Casekaaran Modular Styles -->
+  <!-- Casekaaran Design System (Editorial-Commerce) -->
   <link rel="stylesheet" href="css/variables.css">
   <link rel="stylesheet" href="css/global.css">
   <link rel="stylesheet" href="css/components.css">
@@ -29,7 +29,7 @@
   <aside class="announcement-bar" role="region" aria-label="Announcement">
     <div class="container-custom d-flex align-items-center justify-content-center">
       <span data-i18n="announcement.message">⚡ Festive Special: Flat 20% OFF on all MagSafe & Armor Cases | Free Delivery Nationwide</span>
-      <a href="products.html" class="ms-2 fw-bold" data-i18n="announcement.shopNow">Shop Deals</a>
+      <a href="products.html?deals=active" class="promo-highlight" data-i18n="announcement.shopNow">Shop Deals</a>
     </div>
   </aside>
 
@@ -39,63 +39,84 @@
       
       <!-- Brand Logo -->
       <a href="index.html" class="brand-logo text-decoration-none">
-        <i class="bi bi-shield-shaded text-primary"></i>
-        <span>Casekaaran</span>
-        <span class="brand-badge">Cases Only</span>
+        <span>Casekaaran</span><span class="brand-dot"></span>
+        <span class="brand-tagline d-none d-sm-inline">Cases Only</span>
       </a>
 
-      <!-- Desktop Nav Search -->
-      <div class="d-none d-lg-block" style="width: 380px;">
-        <div class="input-group">
-          <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
-          <input type="text" class="form-control border-start-0 global-search-input" data-i18n-placeholder="nav.searchPlaceholder" placeholder="Search your smartphone model..." />
-        </div>
-      </div>
+      <!-- Desktop Center Navigation Links -->
+      <nav class="d-none d-lg-block" aria-label="Primary navigation">
+        <ul class="nav-center-links">
+          <li><a href="index.html" class="active" data-i18n="nav.home">Home</a></li>
+          <li><a href="products.html" data-i18n="nav.shop">Shop All</a></li>
+          <li><a href="#brands-section" data-i18n="nav.brands">Brands</a></li>
+          <li><a href="products.html?sort=newest">New Arrivals</a></li>
+          <li><a href="products.html?sort=popular">Best Sellers</a></li>
+          <li><a href="products.html?deals=active" data-i18n="nav.deals">Offers</a></li>
+        </ul>
+      </nav>
 
-      <!-- Action Buttons & Language Switcher -->
+      <!-- Right Utility Actions -->
       <div class="nav-actions">
+        <!-- Quick Search Pill (Desktop) -->
+        <div class="nav-search-trigger d-none d-md-flex" onclick="document.querySelector('.global-search-input')?.focus()">
+          <i class="bi bi-search"></i>
+          <span style="font-size: 0.8125rem;">Search model...</span>
+          <kbd>⌘K</kbd>
+        </div>
+
         <!-- Language Switcher Pill -->
         <div class="lang-selector-group">
           <button class="lang-btn active" data-lang="en">EN</button>
           <button class="lang-btn" data-lang="hi">हिन्दी</button>
         </div>
 
-        <!-- Cart Button -->
-        <a href="cart.html" class="nav-icon-btn" aria-label="Cart">
+        <!-- Shopping Cart Bag -->
+        <a href="cart.html" class="nav-icon-btn" aria-label="Shopping Cart">
           <i class="bi bi-bag" style="font-size: 1.25rem;"></i>
           <span class="cart-badge" style="display: none;">0</span>
         </a>
 
-        <!-- Mobile Menu Trigger -->
-        <button class="nav-icon-btn d-lg-none" id="mobile-menu-btn" aria-label="Open menu">
-          <i class="bi bi-list" style="font-size: 1.5rem;"></i>
+        <!-- Mobile Drawer Menu Trigger -->
+        <button class="nav-icon-btn d-lg-none" id="mobile-menu-btn" aria-label="Open mobile navigation">
+          <i class="bi bi-list" style="font-size: 1.6rem;"></i>
         </button>
       </div>
 
     </div>
   </header>
 
-  <!-- Mobile Offcanvas Drawer -->
+  <!-- Mobile Offcanvas Slide-in Drawer -->
   <div class="mobile-nav-backdrop" id="mobile-nav-backdrop"></div>
   <nav class="mobile-nav-drawer" id="mobile-nav-drawer" aria-label="Mobile navigation">
     <div class="mobile-nav-header">
-      <span class="brand-logo"><i class="bi bi-shield-shaded text-primary"></i> Casekaaran</span>
-      <button class="btn-close" id="mobile-nav-close" aria-label="Close"></button>
+      <span class="brand-logo">Casekaaran<span class="brand-dot"></span></span>
+      <button class="mobile-nav-close" id="mobile-nav-close" aria-label="Close navigation">
+        <i class="bi bi-x-lg"></i>
+      </button>
     </div>
     
-    <!-- Mobile Search -->
+    <!-- Mobile Search Input -->
     <div class="mb-4">
-      <input type="text" class="form-control global-search-input" data-i18n-placeholder="nav.searchPlaceholder" placeholder="Search phone model..." />
+      <div class="input-group">
+        <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
+        <input type="text" class="form-control border-start-0 global-search-input" data-i18n-placeholder="nav.searchPlaceholder" placeholder="Search phone model..." />
+      </div>
     </div>
 
+    <!-- Mobile Nav Links -->
     <ul class="mobile-nav-links">
-      <li class="mobile-nav-item"><a href="index.html" data-i18n="nav.home">Home</a></li>
-      <li class="mobile-nav-item"><a href="products.html" data-i18n="nav.shop">All Cases</a></li>
-      <li class="mobile-nav-item"><a href="products.html?deals=1" data-i18n="nav.deals">Special Offers</a></li>
-      <li class="mobile-nav-item"><a href="cart.html" data-i18n="nav.cart">Shopping Cart</a></li>
+      <li class="mobile-nav-item"><a href="index.html" data-i18n="nav.home">Home <i class="bi bi-arrow-right"></i></a></li>
+      <li class="mobile-nav-item"><a href="products.html" data-i18n="nav.shop">All Cases <i class="bi bi-arrow-right"></i></a></li>
+      <li class="mobile-nav-item"><a href="#brands-section" data-i18n="nav.brands">Phone Brands <i class="bi bi-arrow-right"></i></a></li>
+      <li class="mobile-nav-item"><a href="products.html?deals=active" data-i18n="nav.deals">Special Offers <i class="bi bi-arrow-right"></i></a></li>
+      <li class="mobile-nav-item"><a href="cart.html" data-i18n="nav.cart">Shopping Bag <i class="bi bi-arrow-right"></i></a></li>
     </ul>
 
-    <div class="mt-auto pt-4 border-top">
+    <!-- Mobile Drawer Footer -->
+    <div class="mobile-nav-footer">
+      <a href="https://wa.me/919876543210" target="_blank" class="btn-ck btn-ck-secondary btn-block btn-ck-sm mb-3">
+        <i class="bi bi-whatsapp text-success"></i> WhatsApp Support
+      </a>
       <a href="admin-login.html" class="text-muted d-flex align-items-center gap-2" style="font-size: 0.8125rem;">
         <i class="bi bi-shield-lock"></i> <span data-i18n="nav.adminLogin">Admin Portal</span>
       </a>
@@ -103,34 +124,39 @@
   </nav>
 
   <main>
-    <!-- 3. Hero Section -->
+    <!-- 3. Editorial Hero Section -->
     <section class="hero-section">
       <div class="container-custom">
         <div class="row align-items-center g-5">
-          <div class="col-lg-7">
-            <span class="hero-pill">
-              <i class="bi bi-patch-check-fill"></i>
-              <span data-i18n="hero.badge">100% Precision Fit Guaranteed</span>
-            </span>
+          
+          <!-- Left Editorial Copy -->
+          <div class="col-lg-6">
+            <div class="hero-eyebrow" data-i18n="hero.badge">
+              100% Precision Fit Guaranteed
+            </div>
+            
             <h1 class="hero-title" data-i18n="hero.title">
-              Engineered Cases for Your Exact Smartphone
+              Engineered Cases for Your Exact Smartphone.
             </h1>
+            
             <p class="hero-subtitle" data-i18n="hero.subtitle">
-              Protect your phone with aerospace-grade shockproof cases, ultra-slim liquid silicone, and handcrafted leather designs tailored to your specific model.
+              Aerospace-grade drop protection, precision tactile click buttons, and hand-finished textures calibrated specifically to your smartphone model.
             </p>
-            <div class="d-flex flex-wrap gap-3">
+            
+            <div class="hero-cta-group">
               <a href="#quick-finder" class="btn-ck btn-ck-primary btn-ck-lg" data-i18n="hero.ctaExplore">
-                Browse Phone Models <i class="bi bi-arrow-right"></i>
+                <span>Find Your Phone Case</span> <i class="bi bi-arrow-right"></i>
               </a>
               <a href="products.html" class="btn-ck btn-ck-secondary btn-ck-lg" data-i18n="hero.ctaTrending">
                 View Best Sellers
               </a>
             </div>
 
-            <div class="hero-stats">
+            <!-- Trust Stats Row -->
+            <div class="hero-trust-stats">
               <div class="hero-stat-item">
                 <h4>50,000+</h4>
-                <p data-i18n="hero.statCases">Cases Sold</p>
+                <p data-i18n="hero.statCases">Cases Delivered</p>
               </div>
               <div class="hero-stat-item">
                 <h4>150+</h4>
@@ -143,70 +169,153 @@
             </div>
           </div>
 
-          <!-- Quick Phone Model Finder Card -->
-          <div class="col-lg-5" id="quick-finder">
-            <div class="phone-finder-card">
-              <h3 class="finder-title">
-                <i class="bi bi-search text-primary"></i>
-                <span data-i18n="finder.title">Find Your Exact Phone Case</span>
-              </h3>
-              
-              <div class="mb-3">
-                <label class="form-label-custom" data-i18n="finder.selectBrand">1. Select Brand</label>
-                <select id="finder-brand-select" class="form-select form-control-custom">
-                  <option value="" data-i18n="finder.chooseBrand">-- Choose Smartphone Brand --</option>
-                  <option value="apple">Apple</option>
-                  <option value="samsung">Samsung</option>
-                  <option value="oneplus">OnePlus</option>
-                  <option value="google-pixel">Google Pixel</option>
-                  <option value="xiaomi">Xiaomi</option>
-                  <option value="motorola">Motorola</option>
-                </select>
+          <!-- Right Staged Visual Frame -->
+          <div class="col-lg-6">
+            <div class="hero-visual-wrap">
+              <div class="hero-visual-frame">
+                <img src="https://images.unsplash.com/photo-1580910051074-3eb694886505?w=1000&auto=format&fit=crop&q=85" alt="Casekaaran Luxury Phone Case" loading="eager" />
+                
+                <!-- Floating Specs Indicator -->
+                <div class="hero-floating-pill">
+                  <div>
+                    <div class="pill-meta">AeroShield MagSafe Matte</div>
+                    <div class="text-muted" style="font-size: 0.6875rem;">12ft Mil-Spec Drop Defense</div>
+                  </div>
+                  <span class="pill-badge">Precision 1:1</span>
+                </div>
               </div>
+            </div>
+          </div>
 
-              <div class="mb-4">
-                <label class="form-label-custom" data-i18n="finder.selectModel">2. Select Model</label>
-                <select id="finder-model-select" class="form-select form-control-custom" disabled>
-                  <option value="" data-i18n="finder.chooseModel">-- Choose Phone Model --</option>
-                </select>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. Quick Phone Model Finder (Floating Stepped Tool) -->
+    <section class="py-5" id="quick-finder">
+      <div class="container-custom">
+        <div class="phone-finder-card">
+          <div class="row align-items-center g-4">
+            
+            <div class="col-lg-4">
+              <div class="finder-header mb-0">
+                <span class="section-eyebrow">Compatibility Engine</span>
+                <h3 class="finder-title" data-i18n="finder.title">Find Your Exact Case</h3>
+                <p class="finder-subtitle mb-0" data-i18n="finder.helperText">Guaranteed 100% fit for your camera module and buttons.</p>
               </div>
+            </div>
 
-              <button id="finder-submit-btn" class="btn-ck btn-ck-accent btn-block btn-ck-lg" onclick="handleFinderSubmit()">
-                <i class="bi bi-check2-circle"></i> <span data-i18n="finder.findButton">Find Compatible Cases</span>
+            <div class="col-sm-6 col-lg-3">
+              <label class="form-label-custom" data-i18n="finder.selectBrand">1. Select Brand</label>
+              <select id="finder-brand-select" class="form-select form-control-custom">
+                <option value="" data-i18n="finder.chooseBrand">-- Smartphone Brand --</option>
+                <option value="apple">Apple</option>
+                <option value="samsung">Samsung</option>
+                <option value="oneplus">OnePlus</option>
+                <option value="google-pixel">Google Pixel</option>
+                <option value="xiaomi">Xiaomi</option>
+                <option value="motorola">Motorola</option>
+              </select>
+            </div>
+
+            <div class="col-sm-6 col-lg-3">
+              <label class="form-label-custom" data-i18n="finder.selectModel">2. Select Model</label>
+              <select id="finder-model-select" class="form-select form-control-custom" disabled>
+                <option value="" data-i18n="finder.chooseModel">-- Phone Model --</option>
+              </select>
+            </div>
+
+            <div class="col-lg-2">
+              <label class="form-label-custom d-none d-lg-block">&nbsp;</label>
+              <button id="finder-submit-btn" class="btn-ck btn-ck-primary btn-block btn-ck-lg" onclick="handleFinderSubmit()">
+                <i class="bi bi-search"></i> <span>Search</span>
               </button>
+            </div>
 
-              <p class="text-muted text-center mt-3 mb-0" style="font-size: 0.75rem;" data-i18n="finder.helperText">
-                Guaranteed 100% fit for your camera module and button cutouts.
-              </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. Shop by Smartphone Brand -->
+    <section class="py-5" id="brands-section">
+      <div class="container-custom">
+        <div class="section-header">
+          <div>
+            <span class="section-eyebrow">Curated Collections</span>
+            <h2 class="section-title" data-i18n="sections.brandsTitle">Shop by Smartphone Brand</h2>
+            <p class="section-subtitle" data-i18n="sections.brandsSubtitle">Select your phone manufacturer to view dedicated case collections</p>
+          </div>
+        </div>
+
+        <div class="brand-strip-wrap brand-grid" id="brands-grid">
+          <!-- Populated by products.js -->
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. Editorial Bento Showcase (Asymmetric Feature Tile) -->
+    <section class="py-5">
+      <div class="container-custom">
+        <div class="section-header">
+          <div>
+            <span class="section-eyebrow">Atelier Series</span>
+            <h2 class="section-title">Designed for Everyday Defense</h2>
+            <p class="section-subtitle">A balanced fusion of aerospace materials, tactility, and understated elegance.</p>
+          </div>
+        </div>
+
+        <div class="bento-grid">
+          <!-- Large Feature Tile -->
+          <div class="bento-hero-tile">
+            <img src="https://images.unsplash.com/photo-1601593346740-925612772716?w=1200&auto=format&fit=crop&q=85" alt="Titan Armor Drop Defense" class="bento-bg-img" />
+            <div class="bento-content">
+              <span class="badge bg-light text-dark mb-2">MIL-SPEC 810G</span>
+              <h3 class="fw-bold mb-2 text-white font-display fs-2">Titan Armor Defense</h3>
+              <p class="text-white-50 mb-4" style="max-width: 440px;">Double-reinforced corner airbag suspension with elevated 1.4mm camera bezel shield.</p>
+              <a href="products.html?case_type=rugged" class="btn-ck btn-ck-accent btn-ck-sm">
+                <span>Explore Titan Armor</span> <i class="bi bi-arrow-right"></i>
+              </a>
+            </div>
+          </div>
+
+          <!-- Secondary Column -->
+          <div class="d-flex flex-column gap-4">
+            <!-- Secondary Tile 1 -->
+            <div class="p-5 border rounded-4 bg-light flex-fill d-flex flex-column justify-content-between position-relative overflow-hidden">
+              <div>
+                <span class="badge bg-dark text-white mb-2">ULTRA-SLIM</span>
+                <h4 class="fw-bold mb-1 font-display">SilkyTouch Liquid Silicone</h4>
+                <p class="text-muted" style="font-size: 0.875rem;">Plush Japanese microfiber interior lining to prevent micro-abrasions.</p>
+              </div>
+              <a href="products.html?case_type=silicone" class="btn-ck btn-ck-secondary btn-ck-sm align-self-start mt-3">
+                View Silicone Cases <i class="bi bi-arrow-right"></i>
+              </a>
+            </div>
+
+            <!-- Secondary Tile 2 -->
+            <div class="p-5 border rounded-4 bg-light flex-fill d-flex flex-column justify-content-between position-relative overflow-hidden">
+              <div>
+                <span class="badge bg-dark text-white mb-2">LUXURY GRAIN</span>
+                <h4 class="fw-bold mb-1 font-display">Heritage Vegan Leather</h4>
+                <p class="text-muted" style="font-size: 0.875rem;">Handcrafted tactile texture with CNC machined anodized aluminum buttons.</p>
+              </div>
+              <a href="products.html?case_type=leather" class="btn-ck btn-ck-secondary btn-ck-sm align-self-start mt-3">
+                View Leather Cases <i class="bi bi-arrow-right"></i>
+              </a>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- 4. Shop by Smartphone Brand -->
-    <section class="py-5" id="brands-section">
-      <div class="container-custom">
-        <div class="section-header">
-          <div>
-            <h2 class="section-title" data-i18n="sections.brandsTitle">Shop by Smartphone Brand</h2>
-            <p class="section-subtitle" data-i18n="sections.brandsSubtitle">Select your phone manufacturer to view dedicated case collections</p>
-          </div>
-        </div>
-
-        <div class="brand-grid" id="brands-grid">
-          <!-- Populated by products.js -->
-        </div>
-      </div>
-    </section>
-
-    <!-- 5. Active Discount Flash Sale Banner with Countdown -->
+    <!-- 7. Active Discount Flash Sale Banner with Countdown -->
     <section class="container-custom">
       <div class="countdown-banner">
         <div>
-          <span class="badge bg-danger mb-2">LIMITED TIME OFFER</span>
-          <h3 class="mb-1" data-i18n="countdown.title">Limited-Time Flash Deals End In:</h3>
-          <p class="text-light mb-0" style="opacity: 0.85;">Flat 20% applied automatically at checkout across select models.</p>
+          <span class="badge bg-danger mb-3" style="letter-spacing: 0.08em;">TIME-SENSITIVE CAMPAIGN</span>
+          <h3 class="mb-2 font-display" data-i18n="countdown.title">Limited-Time Flash Deals End In:</h3>
+          <p class="text-light mb-0" style="opacity: 0.85; max-width: 480px;">Flat 20% applied automatically at checkout across select phone cases. Limited inventory allocated.</p>
         </div>
 
         <div class="countdown-timer">
@@ -229,22 +338,25 @@
         </div>
 
         <div>
-          <a href="products.html?deals=active" class="btn-ck btn-ck-primary bg-white text-dark btn-ck-lg" data-i18n="countdown.claimOffer">
-            Claim Offer Now
+          <a href="products.html?deals=active" class="btn-ck btn-ck-accent btn-ck-lg" data-i18n="countdown.claimOffer">
+            Claim Offer Now <i class="bi bi-arrow-right"></i>
           </a>
         </div>
       </div>
     </section>
 
-    <!-- 6. Popular Phone Models -->
-    <section class="py-4">
+    <!-- 8. Popular Phone Models -->
+    <section class="py-5">
       <div class="container-custom">
         <div class="section-header">
           <div>
+            <span class="section-eyebrow">Direct Discovery</span>
             <h2 class="section-title" data-i18n="sections.modelsTitle">Popular Phone Models</h2>
             <p class="section-subtitle" data-i18n="sections.modelsSubtitle">Direct access to cases for India's most demanded phones</p>
           </div>
-          <a href="products.html" class="text-primary fw-semibold d-none d-md-block">View All Models <i class="bi bi-chevron-right"></i></a>
+          <a href="products.html" class="text-dark fw-bold text-decoration-none d-none d-md-flex align-items-center gap-1">
+            <span>View All Models</span> <i class="bi bi-arrow-right"></i>
+          </a>
         </div>
 
         <div class="row g-3" id="popular-models-container">
@@ -253,16 +365,17 @@
       </div>
     </section>
 
-    <!-- 7. Trending & Best-Selling Cases Grid -->
-    <section class="py-5 bg-light">
+    <!-- 9. Trending Cases & Best Sellers Grid -->
+    <section class="py-5" style="background: var(--color-surface-soft);">
       <div class="container-custom">
         <div class="section-header">
           <div>
+            <span class="section-eyebrow">Customer Favorites</span>
             <h2 class="section-title" data-i18n="sections.trendingTitle">Trending Phone Cases</h2>
             <p class="section-subtitle" data-i18n="sections.trendingSubtitle">Top picks combining military-grade drop defense and sleek aesthetics</p>
           </div>
           <a href="products.html" class="btn-ck btn-ck-secondary btn-ck-sm d-none d-md-inline-flex" data-i18n="sections.allCases">
-            All Compatible Cases
+            All Compatible Cases <i class="bi bi-arrow-right"></i>
           </a>
         </div>
 
@@ -272,7 +385,7 @@
       </div>
     </section>
 
-    <!-- 8. Customer Trust & Value Proposition -->
+    <!-- 10. Product Benefits / Trust Section -->
     <section class="trust-section">
       <div class="container-custom">
         <div class="row g-4">
@@ -280,8 +393,8 @@
             <div class="trust-card">
               <div class="trust-icon"><i class="bi bi-bullseye"></i></div>
               <div>
-                <h6 class="fw-bold mb-1" data-i18n="trust.feature1Title">Guaranteed 1:1 Fit</h6>
-                <p class="text-muted mb-0" style="font-size: 0.8125rem;" data-i18n="trust.feature1Desc">Laser-machined camera and port cutouts calibrated specifically for your model.</p>
+                <h6 class="trust-title" data-i18n="trust.feature1Title">Guaranteed 1:1 Fit</h6>
+                <p class="trust-desc" data-i18n="trust.feature1Desc">Laser-machined camera and port cutouts calibrated specifically for your model.</p>
               </div>
             </div>
           </div>
@@ -289,17 +402,17 @@
             <div class="trust-card">
               <div class="trust-icon"><i class="bi bi-truck"></i></div>
               <div>
-                <h6 class="fw-bold mb-1" data-i18n="trust.feature2Title">Fast Express Shipping</h6>
-                <p class="text-muted mb-0" style="font-size: 0.8125rem;" data-i18n="trust.feature2Desc">Dispatched within 24 hours with live real-time WhatsApp tracking updates.</p>
+                <h6 class="trust-title" data-i18n="trust.feature2Title">Fast Express Shipping</h6>
+                <p class="trust-desc" data-i18n="trust.feature2Desc">Dispatched within 24 hours with live real-time WhatsApp tracking updates.</p>
               </div>
             </div>
           </div>
           <div class="col-md-6 col-lg-3">
             <div class="trust-card">
-              <div class="trust-icon"><i class="bi bi-shield-lock"></i></div>
+              <div class="trust-icon"><i class="bi bi-shield-check"></i></div>
               <div>
-                <h6 class="fw-bold mb-1" data-i18n="trust.feature3Title">Zero Payment Fee</h6>
-                <p class="text-muted mb-0" style="font-size: 0.8125rem;" data-i18n="trust.feature3Desc">Secure 100% encrypted Cashfree checkout with UPI, Cards, and NetBanking.</p>
+                <h6 class="trust-title" data-i18n="trust.feature3Title">Zero Payment Fee</h6>
+                <p class="trust-desc" data-i18n="trust.feature3Desc">Secure 100% encrypted Cashfree checkout with UPI, Cards, and NetBanking.</p>
               </div>
             </div>
           </div>
@@ -307,8 +420,8 @@
             <div class="trust-card">
               <div class="trust-icon"><i class="bi bi-arrow-repeat"></i></div>
               <div>
-                <h6 class="fw-bold mb-1" data-i18n="trust.feature4Title">Customer Happiness</h6>
-                <p class="text-muted mb-0" style="font-size: 0.8125rem;" data-i18n="trust.feature4Desc">Hassle-free replacement if there is any fitting imperfection.</p>
+                <h6 class="trust-title" data-i18n="trust.feature4Title">Customer Happiness</h6>
+                <p class="trust-desc" data-i18n="trust.feature4Desc">Hassle-free replacement if there is any fitting imperfection.</p>
               </div>
             </div>
           </div>
@@ -317,19 +430,20 @@
     </section>
   </main>
 
-  <!-- 9. Footer -->
+  <!-- 11. Multi-Column Editorial Footer -->
   <footer class="footer-custom">
     <div class="container-custom">
       <div class="row g-5">
+        
         <div class="col-lg-4">
           <div class="brand-logo text-white mb-3">
-            <i class="bi bi-shield-shaded text-primary"></i> Casekaaran
+            Casekaaran<span class="brand-dot"></span>
           </div>
-          <p class="text-muted" style="font-size: 0.875rem;">
-            Casekaaran is India's dedicated destination for premium smartphone protection. Precision engineered cases for Apple, Samsung, OnePlus, Google Pixel, Xiaomi, and more.
+          <p style="color: #8A8F9C; font-size: 0.875rem; line-height: 1.6; max-width: 320px;">
+            India's dedicated destination for premium smartphone protection. Precision engineered cases for Apple, Samsung, OnePlus, Google Pixel, Xiaomi, and more.
           </p>
-          <div class="d-flex gap-3 text-muted mt-3">
-            <i class="bi bi-shield-check text-success"></i> WhatsApp Order Updates Guaranteed
+          <div class="d-flex align-items-center gap-2 mt-4" style="color: var(--color-accent); font-size: 0.8125rem; font-weight: 600;">
+            <i class="bi bi-whatsapp"></i> Real-Time WhatsApp Order & Dispatch Tracking
           </div>
         </div>
 
@@ -355,14 +469,18 @@
         </div>
 
         <div class="col-lg-4">
-          <h5 class="footer-heading">Customer Assistance</h5>
-          <p class="text-muted" style="font-size: 0.875rem;">
-            Need help finding your exact phone model or checking compatibility? Reach out directly via WhatsApp.
+          <h5 class="footer-heading">Concierge & Assistance</h5>
+          <p style="color: #8A8F9C; font-size: 0.875rem; margin-bottom: 16px;">
+            Need help checking phone compatibility or sizing? Chat directly with our product team.
           </p>
-          <a href="https://wa.me/919876543210" target="_blank" class="btn-ck btn-ck-success btn-ck-sm">
-            <i class="bi bi-whatsapp"></i> Chat on WhatsApp
+          <a href="https://wa.me/919876543210" target="_blank" class="btn-ck btn-ck-secondary btn-ck-sm mb-4">
+            <i class="bi bi-whatsapp text-success"></i> WhatsApp Concierge
           </a>
+          <div class="text-muted" style="font-size: 0.75rem;">
+            Support Hours: Mon - Sat, 10:00 AM - 7:00 PM IST
+          </div>
         </div>
+
       </div>
 
       <div class="footer-bottom">

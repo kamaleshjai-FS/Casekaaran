@@ -1,48 +1,56 @@
 /* ==========================================================================
-   CASEKAARAN — ADMIN DASHBOARD STYLES
+   CASEKAARAN — ADMIN DASHBOARD STYLES (REDESIGN)
+   Modern Executive SaaS Aesthetic
    ========================================================================== */
 
 .admin-layout {
   display: flex;
   min-height: 100vh;
-  background-color: var(--color-section-bg);
+  background-color: var(--color-surface-soft);
+  color: var(--color-text-main);
+  font-family: var(--font-body);
 }
 
-/* Admin Sidebar */
+/* ==========================================================================
+   ADMIN SIDEBAR
+   ========================================================================== */
 .admin-sidebar {
-  width: 260px;
-  background-color: #0F172A;
-  color: #94A3B8;
+  width: 270px;
+  background-color: #0E1015;
+  color: #8C919D;
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
   position: sticky;
   top: 0;
   height: 100vh;
-  border-right: 1px solid #1E293B;
+  border-right: 1px solid #1C1F28;
   transition: width var(--transition-base);
+  z-index: 1000;
 }
 
 .admin-sidebar-header {
-  padding: var(--space-5) var(--space-6);
-  border-bottom: 1px solid #1E293B;
+  padding: var(--space-6) var(--space-6);
+  border-bottom: 1px solid #1C1F28;
   display: flex;
   align-items: center;
-  gap: var(--space-3);
+  gap: 12px;
 }
 
 .admin-sidebar-header .brand-title {
   color: var(--color-text-white);
-  font-weight: var(--fw-bold);
+  font-family: var(--font-display);
+  font-weight: var(--fw-extrabold);
   font-size: 1.25rem;
+  letter-spacing: -0.02em;
 }
 
 .admin-nav {
   list-style: none;
-  padding: var(--space-4) var(--space-3);
+  padding: var(--space-5) var(--space-4);
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
   flex: 1;
   overflow-y: auto;
 }
@@ -51,12 +59,13 @@
   width: 100%;
   display: flex;
   align-items: center;
-  gap: var(--space-3);
-  padding: 10px 14px;
+  gap: 12px;
+  padding: 11px 16px;
   border-radius: var(--radius-md);
   border: none;
   background: transparent;
-  color: #94A3B8;
+  color: #8C919D;
+  font-family: var(--font-body);
   font-size: 0.875rem;
   font-weight: var(--fw-medium);
   cursor: pointer;
@@ -65,108 +74,123 @@
 }
 
 .admin-nav-item button:hover {
-  background: #1E293B;
+  background: #191C24;
   color: var(--color-text-white);
 }
 
 .admin-nav-item button.active {
-  background: var(--color-accent);
-  color: var(--color-text-white);
-  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+  background: #1C202B;
+  color: var(--color-accent);
+  font-weight: var(--fw-bold);
+  box-shadow: inset 3px 0 0 var(--color-accent);
 }
 
 .admin-sidebar-footer {
   padding: var(--space-4) var(--space-5);
-  border-top: 1px solid #1E293B;
+  border-top: 1px solid #1C1F28;
 }
 
-/* Admin Main Content */
+/* ==========================================================================
+   ADMIN MAIN CONTENT AREA
+   ========================================================================== */
 .admin-main {
   flex: 1;
   display: flex;
   flex-direction: column;
-  min-width: 0; /* Prevents flex overflow */
+  min-width: 0;
 }
 
 .admin-topbar {
-  height: 64px;
+  height: 68px;
   background: var(--color-surface);
-  border-bottom: 1px solid var(--color-border-light);
+  border-bottom: 1px solid var(--color-border);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 var(--space-8);
+  padding: 0 clamp(16px, 3vw, 36px);
   position: sticky;
   top: 0;
-  z-index: 100;
+  z-index: 99;
 }
 
 .admin-content-area {
-  padding: var(--space-8);
+  padding: clamp(20px, 4vw, 40px);
   flex: 1;
 }
 
 /* KPI Stat Cards Grid */
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
   gap: var(--space-5);
   margin-bottom: var(--space-8);
 }
 
 .stat-card {
   background: var(--color-surface);
-  border: 1px solid var(--color-border-light);
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
-  padding: var(--space-5);
+  padding: var(--space-6);
   display: flex;
   align-items: center;
   gap: var(--space-4);
+  box-shadow: var(--shadow-subtle);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
   box-shadow: var(--shadow-sm);
 }
 
 .stat-icon {
-  width: 52px;
-  height: 52px;
+  width: 50px;
+  height: 50px;
   border-radius: var(--radius-md);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   flex-shrink: 0;
 }
 
-.stat-icon.blue { background: #EFF6FF; color: #2563EB; }
-.stat-icon.green { background: #ECFDF5; color: #16A34A; }
-.stat-icon.amber { background: #FFFBEB; color: #D97706; }
-.stat-icon.red { background: #FEF2F2; color: #DC2626; }
+.stat-icon.blue { background: #F0F4FF; color: #3B66FF; }
+.stat-icon.green { background: #EDF7F2; color: #26845B; }
+.stat-icon.amber { background: #FEF7ED; color: #C97A1E; }
+.stat-icon.red { background: #FDF2F2; color: #D94B45; }
 
 .stat-info .stat-value {
-  font-size: 1.5rem;
-  font-weight: var(--fw-bold);
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: var(--fw-extrabold);
   color: var(--color-primary);
-  line-height: 1.2;
+  line-height: 1.15;
 }
 
 .stat-info .stat-label {
-  font-size: 0.8125rem;
+  font-size: 0.75rem;
+  font-weight: var(--fw-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
   color: var(--color-text-muted);
-  margin-top: 2px;
+  margin-top: 4px;
 }
 
-/* Data Tables */
+/* ==========================================================================
+   ADMIN DATA TABLES & CARDS
+   ========================================================================== */
 .admin-card {
   background: var(--color-surface);
-  border: 1px solid var(--color-border-light);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-subtle);
   overflow: hidden;
-  margin-bottom: var(--space-6);
+  margin-bottom: var(--space-8);
 }
 
 .admin-card-header {
   padding: var(--space-5) var(--space-6);
-  border-bottom: 1px solid var(--color-border-light);
+  border-bottom: 1px solid var(--color-border);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -186,36 +210,41 @@
 }
 
 .admin-table th {
-  background: var(--color-section-bg);
+  background: var(--color-surface-soft);
   color: var(--color-text-muted);
-  font-weight: var(--fw-semibold);
-  padding: 12px 18px;
-  border-bottom: 1px solid var(--color-border-light);
+  font-family: var(--font-display);
+  font-weight: var(--fw-bold);
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--color-border);
   text-transform: uppercase;
-  font-size: 0.75rem;
-  letter-spacing: 0.04em;
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
 }
 
 .admin-table td {
-  padding: 14px 18px;
-  border-bottom: 1px solid var(--color-border-light);
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--color-border);
   color: var(--color-text-body);
   vertical-align: middle;
 }
 
-.admin-table tr:hover {
-  background: var(--color-surface-hover);
+.admin-table tr:last-child td {
+  border-bottom: none;
 }
 
-/* Modals */
+.admin-table tr:hover {
+  background: #FAFAFA;
+}
+
+/* ==========================================================================
+   ADMIN MODAL
+   ========================================================================== */
 .ck-modal-backdrop {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(15, 23, 42, 0.6);
-  backdrop-filter: blur(4px);
+  inset: 0;
+  background: rgba(14, 16, 21, 0.65);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
   z-index: 2500;
   display: none;
   align-items: center;
@@ -231,16 +260,22 @@
   background: var(--color-surface);
   border-radius: var(--radius-xl);
   width: 100%;
-  max-width: 600px;
+  max-width: 580px;
   max-height: 90vh;
   overflow-y: auto;
-  box-shadow: var(--shadow-xl);
-  border: 1px solid var(--color-border-light);
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--color-border);
+  animation: modalPop 0.28s var(--ease-editorial);
+}
+
+@keyframes modalPop {
+  0% { transform: scale(0.95); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
 }
 
 .ck-modal-header {
   padding: var(--space-5) var(--space-6);
-  border-bottom: 1px solid var(--color-border-light);
+  border-bottom: 1px solid var(--color-border);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -252,9 +287,9 @@
 
 .ck-modal-footer {
   padding: var(--space-4) var(--space-6);
-  border-top: 1px solid var(--color-border-light);
+  border-top: 1px solid var(--color-border);
   display: flex;
   justify-content: flex-end;
   gap: var(--space-3);
-  background: var(--color-section-bg);
+  background: var(--color-surface-soft);
 }

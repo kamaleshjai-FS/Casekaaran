@@ -1,8 +1,9 @@
 /**
- * Casekaaran — Navigation & Global Interactivity
+ * Casekaaran — Navigation & Motion Interactions (Redesign)
+ * Editorial-Commerce Luxury Motion Design
  */
 document.addEventListener('DOMContentLoaded', () => {
-  // Mobile Drawer Toggle
+  // Mobile Offcanvas Drawer
   const mobileMenuBtn = document.getElementById('mobile-menu-btn');
   const mobileNavDrawer = document.getElementById('mobile-nav-drawer');
   const mobileNavBackdrop = document.getElementById('mobile-nav-backdrop');
@@ -28,6 +29,28 @@ document.addEventListener('DOMContentLoaded', () => {
   if (mobileCloseBtn) mobileCloseBtn.addEventListener('click', closeMobileNav);
   if (mobileNavBackdrop) mobileNavBackdrop.addEventListener('click', closeMobileNav);
 
+  // Close drawer on link click
+  document.querySelectorAll('.mobile-nav-item a').forEach(link => {
+    link.addEventListener('click', closeMobileNav);
+  });
+
+  // Escape key to close
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeMobileNav();
+  });
+
+  // Global Search Shortcuts (Cmd/Ctrl + K)
+  document.addEventListener('keydown', (e) => {
+    if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+      e.preventDefault();
+      const firstSearch = document.querySelector('.global-search-input');
+      if (firstSearch) {
+        firstSearch.focus();
+        firstSearch.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
+  });
+
   // Search Bar Submissions
   const searchInputs = document.querySelectorAll('.global-search-input');
   searchInputs.forEach(input => {
@@ -45,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const navbar = document.querySelector('.navbar-custom');
   if (navbar) {
     window.addEventListener('scroll', () => {
-      if (window.scrollY > 10) {
+      if (window.scrollY > 20) {
         navbar.classList.add('scrolled');
       } else {
         navbar.classList.remove('scrolled');
@@ -53,10 +76,45 @@ document.addEventListener('DOMContentLoaded', () => {
     }, { passive: true });
   }
 
-  // Setup Flash Sale Countdown Timer (if present on page)
+  // Scroll Reveal Observer (IntersectionObserver)
+  initScrollAnimations();
+
+  // Setup Flash Sale Countdown Timer
   initCountdownTimer();
 });
 
+/**
+ * High-performance Scroll Animations using IntersectionObserver
+ */
+function initScrollAnimations() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    return; // Respect reduced motion preference
+  }
+
+  const observerOptions = {
+    root: null,
+    rootMargin: '0px 0px -40px 0px',
+    threshold: 0.12
+  };
+
+  const observer = new IntersectionObserver((entries, obs) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+        obs.unobserve(entry.target);
+      }
+    });
+  }, observerOptions);
+
+  document.querySelectorAll('.reveal-on-scroll, .section-header, .product-card, .brand-card, .trust-card').forEach(el => {
+    el.classList.add('reveal-item');
+    observer.observe(el);
+  });
+}
+
+/**
+ * Flash Sale Countdown Timer
+ */
 function initCountdownTimer() {
   const daysEl = document.getElementById('timer-days');
   const hoursEl = document.getElementById('timer-hours');
@@ -65,9 +123,8 @@ function initCountdownTimer() {
 
   if (!daysEl || !hoursEl || !minsEl || !secsEl) return;
 
-  // Set target to midnight + 3 days in UTC
   const targetDate = new Date();
-  targetDate.setDate(targetDate.getDate() + 3);
+  targetDate.setDate(targetDate.getDate() + 2);
   targetDate.setHours(23, 59, 59, 999);
 
   function update() {

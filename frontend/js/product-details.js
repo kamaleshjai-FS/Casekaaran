@@ -1,5 +1,6 @@
 /**
- * Casekaaran — Product Details View & Compatibility Engine
+ * Casekaaran — Product Details View & Compatibility Engine (Redesign)
+ * Editorial-Commerce Product Storytelling
  */
 document.addEventListener('DOMContentLoaded', async () => {
   const params = new URLSearchParams(window.location.search);
@@ -16,7 +17,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       currentProduct = res.data;
       renderDetails(currentProduct);
     } else {
-      // Use fallback
+      // High-resolution fallback
       currentProduct = {
         id: 1,
         name: 'AeroShield MagSafe Matte Case',
@@ -27,9 +28,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         description: 'Engineered specifically for extreme drop protection with an integrated N52 Neodymium MagSafe magnetic ring. Tested up to 12ft military-grade drops with raised 1.2mm camera bezels to prevent scratches.',
         case_type: 'MagSafe Matte',
         images: [
-          'https://images.unsplash.com/photo-1580910051074-3eb694886505?w=800&auto=format&fit=crop&q=80',
-          'https://images.unsplash.com/photo-1601593346740-925612772716?w=800&auto=format&fit=crop&q=80',
-          'https://images.unsplash.com/photo-1541872703-74c5e44368f9?w=800&auto=format&fit=crop&q=80'
+          'https://images.unsplash.com/photo-1580910051074-3eb694886505?w=1000&auto=format&fit=crop&q=85',
+          'https://images.unsplash.com/photo-1601593346740-925612772716?w=1000&auto=format&fit=crop&q=85',
+          'https://images.unsplash.com/photo-1541872703-74c5e44368f9?w=1000&auto=format&fit=crop&q=85'
         ],
         compatible_models: [
           { id: 101, name: 'iPhone 16 Pro Max' },
@@ -58,14 +59,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     const thumbsContainer = document.getElementById('pd-thumbnails');
     const modelSelect = document.getElementById('pd-model-select');
     const compatBox = document.getElementById('pd-compat-box');
+    const stickyPriceEl = document.getElementById('sticky-mobile-price');
 
     if (titleEl) titleEl.textContent = p.name;
     if (priceEl) priceEl.textContent = `${CONFIG.CURRENCY_SYMBOL}${p.base_price}`;
+    if (stickyPriceEl) stickyPriceEl.textContent = `${CONFIG.CURRENCY_SYMBOL}${p.base_price}`;
+
     if (origPriceEl) {
       if (p.original_price > p.base_price) {
         origPriceEl.textContent = `${CONFIG.CURRENCY_SYMBOL}${p.original_price}`;
         const pct = Math.round(((p.original_price - p.base_price) / p.original_price) * 100);
-        if (discountEl) discountEl.textContent = `${pct}% OFF`;
+        if (discountEl) discountEl.textContent = `-${pct}% OFF`;
       } else {
         origPriceEl.style.display = 'none';
         if (discountEl) discountEl.style.display = 'none';
@@ -75,15 +79,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (materialEl) materialEl.textContent = p.material;
 
     // Gallery Images
-    const imgs = p.images && p.images.length ? p.images : [p.image_url || 'https://images.unsplash.com/photo-1580910051074-3eb694886505?w=800'];
+    const imgs = p.images && p.images.length ? p.images : [p.image_url || 'https://images.unsplash.com/photo-1580910051074-3eb694886505?w=1000'];
     if (mainImgEl) mainImgEl.src = imgs[0];
 
     if (thumbsContainer) {
       thumbsContainer.innerHTML = imgs.map((imgUrl, idx) => `
-        <img src="${imgUrl}" 
-             class="img-thumbnail ${idx === 0 ? 'border-primary' : ''}" 
-             style="width: 72px; height: 72px; object-fit: cover; cursor: pointer; border-radius: 8px;"
-             onclick="changeMainImage('${imgUrl}', this)" />
+        <div class="thumb-item ${idx === 0 ? 'active' : ''}" 
+             style="width: 76px; height: 76px; border-radius: var(--radius-md); overflow: hidden; border: 2px solid ${idx === 0 ? 'var(--color-primary)' : 'var(--color-border)'}; cursor: pointer; transition: all var(--transition-fast);"
+             onclick="changeMainImage('${imgUrl}', this)">
+          <img src="${imgUrl}" style="width: 100%; height: 100%; object-fit: cover;" alt="Thumbnail ${idx+1}" />
+        </div>
       `).join('');
     }
 
@@ -103,9 +108,9 @@ document.addEventListener('DOMContentLoaded', async () => {
           if (selectedModelName) {
             compatBox.style.display = 'flex';
             compatBox.innerHTML = `
-              <i class="bi bi-shield-check" style="font-size: 1.25rem;"></i>
+              <i class="bi bi-shield-check"></i>
               <div>
-                <strong>100% Fit Confirmed:</strong> Calibrated laser cutouts for ${selectedModelName}. Lens protection and responsive click buttons guaranteed.
+                <strong>100% Fit Confirmed:</strong> Calibrated laser cutouts for ${selectedModelName}. Zero camera vignette and tactile button clicks guaranteed.
               </div>
             `;
           } else {
@@ -158,60 +163,67 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Add To Cart & Buy Now Buttons
   const addBtn = document.getElementById('btn-add-to-cart');
   const buyBtn = document.getElementById('btn-buy-now');
+  const stickyBuyBtn = document.getElementById('btn-sticky-buy-now');
+
+  function handleAddToCart() {
+    if (!currentProduct) return false;
+    if (!selectedModelId) {
+      API.toast('Select Phone Model', 'Please choose your exact smartphone model above', 'error');
+      const modelSelect = document.getElementById('pd-model-select');
+      if (modelSelect) {
+        modelSelect.focus();
+        modelSelect.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      return false;
+    }
+
+    return Cart.addItem({
+      product_id: currentProduct.id,
+      product_name: currentProduct.name,
+      phone_model_id: Number(selectedModelId),
+      phone_model_name: selectedModelName,
+      price: currentProduct.base_price,
+      original_price: currentProduct.original_price,
+      image_url: currentProduct.images ? currentProduct.images[0] : currentProduct.image_url,
+      quantity: selectedQty
+    });
+  }
 
   if (addBtn) {
-    addBtn.addEventListener('click', () => {
-      if (!currentProduct) return;
-      if (!selectedModelId) {
-        API.toast('Select Phone Model', 'Please choose your exact smartphone model above', 'error');
-        return;
-      }
-
-      Cart.addItem({
-        product_id: currentProduct.id,
-        product_name: currentProduct.name,
-        phone_model_id: Number(selectedModelId),
-        phone_model_name: selectedModelName,
-        price: currentProduct.base_price,
-        original_price: currentProduct.original_price,
-        image_url: currentProduct.images ? currentProduct.images[0] : currentProduct.image_url,
-        quantity: selectedQty
-      });
-    });
+    addBtn.addEventListener('click', handleAddToCart);
   }
 
   if (buyBtn) {
     buyBtn.addEventListener('click', () => {
-      if (!currentProduct) return;
-      if (!selectedModelId) {
-        API.toast('Select Phone Model', 'Please choose your exact smartphone model above', 'error');
-        return;
+      if (handleAddToCart()) {
+        window.location.href = 'checkout.html';
       }
+    });
+  }
 
-      const added = Cart.addItem({
-        product_id: currentProduct.id,
-        product_name: currentProduct.name,
-        phone_model_id: Number(selectedModelId),
-        phone_model_name: selectedModelName,
-        price: currentProduct.base_price,
-        original_price: currentProduct.original_price,
-        image_url: currentProduct.images ? currentProduct.images[0] : currentProduct.image_url,
-        quantity: selectedQty
-      });
-
-      if (added) {
+  if (stickyBuyBtn) {
+    stickyBuyBtn.addEventListener('click', () => {
+      if (handleAddToCart()) {
         window.location.href = 'checkout.html';
       }
     });
   }
 });
 
-function changeMainImage(url, thumbEl) {
+function changeMainImage(url, thumbContainer) {
   const mainImg = document.getElementById('pd-main-image');
-  if (mainImg) mainImg.src = url;
+  if (mainImg) {
+    mainImg.style.opacity = '0.4';
+    mainImg.src = url;
+    setTimeout(() => {
+      mainImg.style.opacity = '1';
+    }, 120);
+  }
 
-  document.querySelectorAll('#pd-thumbnails img').forEach(img => {
-    img.classList.remove('border-primary');
+  document.querySelectorAll('#pd-thumbnails .thumb-item').forEach(el => {
+    el.style.borderColor = 'var(--color-border)';
   });
-  if (thumbEl) thumbEl.classList.add('border-primary');
+  if (thumbContainer) {
+    thumbContainer.style.borderColor = 'var(--color-primary)';
+  }
 }
