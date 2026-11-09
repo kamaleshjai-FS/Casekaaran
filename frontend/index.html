@@ -246,8 +246,10 @@
               <label class="form-label-custom" data-i18n="finder.selectBrand">1. Select Brand</label>
               <select id="finder-brand-select" class="form-select form-control-custom">
                 <option value="" data-i18n="finder.chooseBrand">-- Smartphone Brand --</option>
+                <option value="samsung" selected>Samsung</option>
+                <option value="redmi">Redmi</option>
+                <option value="nothing">Nothing</option>
                 <option value="apple">Apple</option>
-                <option value="samsung">Samsung</option>
                 <option value="oneplus">OnePlus</option>
                 <option value="google-pixel">Google Pixel</option>
                 <option value="xiaomi">Xiaomi</option>
@@ -257,7 +259,7 @@
 
             <div class="col-sm-6 col-lg-3">
               <label class="form-label-custom" data-i18n="finder.selectModel">2. Select Model</label>
-              <select id="finder-model-select" class="form-select form-control-custom" disabled>
+              <select id="finder-model-select" class="form-select form-control-custom">
                 <option value="" data-i18n="finder.chooseModel">-- Phone Model --</option>
               </select>
             </div>
@@ -271,6 +273,104 @@
 
           </div>
         </div>
+      </div>
+    </section>
+
+    <!-- 4B. NEW TRENDING 3D CASES — INTERACTIVE PHONE MODEL & TACTILE CASE EXPERIENCE -->
+    <section class="py-5 section-trending-3d" id="trending-3d-experience">
+      <div class="container-custom">
+        
+        <!-- Section Header -->
+        <div class="text-center mb-5">
+          <div class="trending-badge-glow">
+            <i class="bi bi-lightning-charge-fill"></i> <span>NEW TRENDING 3D ATELIER</span>
+          </div>
+          <h2 class="display-5 fw-bold text-white font-display mb-3">
+            Find Your Phone &amp; Unlock Tactile 3D Cases
+          </h2>
+          <p class="text-white-50 mx-auto" style="max-width: 660px; font-size: 0.9375rem;">
+            Step-by-step verified compatibility: Choose your smartphone brand, pick your exact model, inspect your camera layout, and unlock custom-molded 3D shockproof cases in stock.
+          </p>
+        </div>
+
+        <!-- STEP 1: Brand Selection (Samsung, Redmi, Nothing) -->
+        <div class="mb-4">
+          <div class="d-flex align-items-center justify-content-between mb-3">
+            <span class="text-gold fw-bold" style="font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase;">
+              STEP 1: SELECT YOUR SMARTPHONE BRAND
+            </span>
+            <span class="text-white-50" style="font-size: 0.75rem;">3 Dedicated Brand Lines</span>
+          </div>
+          
+          <div class="brand-select-grid" id="trending3d-brands">
+            <!-- Dynamically populated by trending-3d.js with Samsung, Redmi, Nothing -->
+          </div>
+        </div>
+
+        <!-- STEP 2: Phone Model Search & Interactive Grid -->
+        <div class="model-picker-container">
+          <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
+            <div>
+              <span class="text-gold fw-bold" style="font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase;">
+                STEP 2: SELECT YOUR EXACT PHONE MODEL
+              </span>
+              <p class="text-white-50 mb-0" style="font-size: 0.75rem;">
+                Search aliases supported (e.g. "M12", "POCO M6 PRO", "CMF", "S24 Ultra")
+              </p>
+            </div>
+            <span class="badge bg-dark border border-secondary text-white" id="trending3d-models-count" style="font-size: 0.75rem;">
+              Loading models...
+            </span>
+          </div>
+
+          <!-- Instant Search Box -->
+          <div class="model-search-bar-wrap">
+            <i class="bi bi-search model-search-icon"></i>
+            <input type="text" id="trending3d-search-input" class="model-search-input" 
+                   placeholder="Type your exact phone model (e.g. M12, POCO M6 PRO, S24 Ultra, CMF 1)..." 
+                   autocomplete="off" />
+            <button id="trending3d-search-clear" class="model-search-clear" title="Clear Search">
+              <i class="bi bi-x-circle-fill"></i>
+            </button>
+          </div>
+
+          <!-- Scrollable Model Grid -->
+          <div class="model-grid" id="trending3d-models-grid">
+            <!-- Dynamically populated by trending-3d.js -->
+          </div>
+        </div>
+
+        <!-- STEP 3: Selected Phone Presentation & Camera Arrangement Spotlight -->
+        <div class="mb-5">
+          <div class="mb-3">
+            <span class="text-gold fw-bold" style="font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase;">
+              STEP 3: DEVICE &amp; CAMERA ARRANGEMENT VERIFICATION
+            </span>
+          </div>
+          <div class="selected-device-spotlight" id="trending3d-spotlight">
+            <!-- Dynamically populated by trending-3d.js -->
+          </div>
+        </div>
+
+        <!-- STEP 4: Compatible 3D Cases Catalogue (In Stock Only) -->
+        <div class="mb-4">
+          <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-4">
+            <div>
+              <span class="text-gold fw-bold" style="font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase;">
+                STEP 4: COMPATIBLE NEW TRENDING 3D CASES (IN STOCK ONLY)
+              </span>
+              <h3 class="fw-bold font-display text-white fs-3 mb-0">Crafted 3D Tactile Relief Edition</h3>
+            </div>
+            <span class="badge" style="background: rgba(208, 166, 107, 0.2); color: var(--color-soft-gold); border: 1px solid rgba(208, 166, 107, 0.4); padding: 6px 14px; font-size: 0.75rem;">
+              ⚡ Genuine Atelier Production
+            </span>
+          </div>
+
+          <div class="row g-4" id="trending3d-cases-grid">
+            <!-- Dynamically populated by trending-3d.js -->
+          </div>
+        </div>
+
       </div>
     </section>
 
@@ -559,7 +659,9 @@
   </footer>
 
   <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="js/config.js"></script>
+  <script src="js/phone-models-data.js"></script>
   <script src="js/i18n/en.js"></script>
   <script src="js/i18n/hi.js"></script>
   <script src="js/language.js"></script>
@@ -567,16 +669,24 @@
   <script src="js/cart.js"></script>
   <script src="js/navigation.js"></script>
   <script src="js/products.js"></script>
+  <script src="js/trending-3d.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       ProductCatalog.loadBrands();
       ProductCatalog.loadProducts();
-      ProductCatalog.loadModels('apple');
+      ProductCatalog.loadModels('samsung');
     });
 
     function handleFinderSubmit() {
       const brand = document.getElementById('finder-brand-select').value;
       const model = document.getElementById('finder-model-select').value;
+      if (['samsung', 'redmi', 'nothing'].includes(brand)) {
+        const el = document.getElementById('trending-3d-experience');
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth' });
+          return;
+        }
+      }
       if (model) {
         window.location.href = `products.html?model=${encodeURIComponent(model)}`;
       } else if (brand) {

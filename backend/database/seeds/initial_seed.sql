@@ -27,7 +27,9 @@ INSERT INTO brands (name, slug, icon, display_order, is_active) VALUES
 ('Motorola', 'motorola', 'bi-phone', 6, TRUE),
 ('Realme', 'realme', 'bi-phone', 7, TRUE),
 ('Vivo', 'vivo', 'bi-phone', 8, TRUE),
-('Oppo', 'oppo', 'bi-phone', 9, TRUE)
+('Oppo', 'oppo', 'bi-phone', 9, TRUE),
+('Redmi', 'redmi', 'bi-lightning-charge', 10, TRUE),
+('Nothing', 'nothing', 'bi-circle-half', 11, TRUE)
 ON DUPLICATE KEY UPDATE name=VALUES(name);
 
 -- 3. Smartphone Phone Models
@@ -77,7 +79,8 @@ INSERT INTO case_types (name, slug, description, is_active) VALUES
 ('Military Rugged', 'rugged', 'Dual-layer bumper defense tested against 12-foot drops with reinforced air-cushion corner bumpers.', TRUE),
 ('Liquid Silicone', 'silicone', 'Silky-touch food-grade silicone lined with plush microfiber interior to prevent micro-scratches.', TRUE),
 ('Vegan Leather', 'leather', 'Handcrafted premium textured grain leather offering sophisticated executive elegance.', TRUE),
-('Clear Hybrid', 'clear-hybrid', 'Anti-yellowing optical clarity with 4H scratch-resistant acrylic backplate and TPU shock perimeter.', TRUE)
+('Clear Hybrid', 'clear-hybrid', 'Anti-yellowing optical clarity with 4H scratch-resistant acrylic backplate and TPU shock perimeter.', TRUE),
+('3D Tactile Case', '3d-case', 'Physical 3D embossed backplate with Italian tricolor racing stripe and tactile hexagonal honeycomb mesh.', TRUE)
 ON DUPLICATE KEY UPDATE name=VALUES(name);
 
 -- 5. Colours
@@ -94,7 +97,9 @@ INSERT INTO products (id, case_type_id, name, slug, material, description, featu
 (1, 1, 'AeroShield MagSafe Matte Case', 'aeroshield-magsafe-matte-case', 'Polycarbonate & German TPU Edge Bumper', 'Engineered specifically for extreme drop protection with an integrated N52 Neodymium MagSafe magnetic ring. Tested up to 12ft military-grade drops with raised 1.2mm camera bezels to prevent scratches.', '["N52 MagSafe Ring", "12ft Drop Tested", "Anti-fingerprint Matte Finish", "Tactile CNC Metal Buttons"]', 699.00, 999.00, TRUE, TRUE),
 (2, 2, 'Titan Armor Military Drop Defense Case', 'titan-armor-military-drop-defense', 'Dual-Layer Aerospace Polymer & Shock Honeycomb', 'Engineered to withstand the toughest impacts. Featuring dual-layer perimeter defense, reinforced internal shock absorbers, and a deep camera housing shield.', '["Mil-STD 810G Certified", "15ft Drop Rating", "Corner Airbag Suspension", "Enhanced Ergonomic Grip"]', 799.00, 1199.00, TRUE, TRUE),
 (3, 3, 'SilkyTouch Liquid Silicone Case', 'silkytouch-liquid-silicone-case', 'Food-Grade Microfiber Lined Silicone', 'Ultra-soft liquid silicone exterior feels sublime in hand while absorbing shock. Interior Japanese microfiber lining keeps your phone pristine.', '["Silky Soft Texture", "Plush Microfiber Lining", "Easy to Wipe Clean", "Precise Port Cutouts"]', 499.00, 799.00, TRUE, TRUE),
-(4, 4, 'Heritage Handcrafted Vegan Leather Case', 'heritage-vegan-leather-case', 'Grain Textured Vegan Leather & Aluminum Accents', 'Timeless luxury meets everyday durability. Wrapped in water-resistant vegan leather that patinas gracefully without fading or peeling.', '["Full Grain Texture", "Aircraft Grade Aluminum Buttons", "MagSafe Compatible", "Featherweight 28g"]', 899.00, 1299.00, TRUE, TRUE)
+(4, 4, 'Heritage Handcrafted Vegan Leather Case', 'heritage-vegan-leather-case', 'Grain Textured Vegan Leather & Aluminum Accents', 'Timeless luxury meets everyday durability. Wrapped in water-resistant vegan leather that patinas gracefully without fading or peeling.', '["Full Grain Texture", "Aircraft Grade Aluminum Buttons", "MagSafe Compatible", "Featherweight 28g"]', 899.00, 1299.00, TRUE, TRUE),
+(5, 6, 'Scuderia Racing 3D Honeycomb Case', 'scuderia-racing-3d-honeycomb-case', '3D Tactile Embossed TPU & Honeycomb Shock Shell', 'Physical 3D embossed Scuderia shield with Italian tricolor racing stripe and tactile hexagonal honeycomb mesh. Engineered with raised camera bezels and reinforced shock-absorbing bumper edges.', '["Physical 3D Embossed Shield", "Tricolor Racing Stripe", "Honeycomb Shock Absorption", "Tactile Bumper Grip", "100% Precision Camera Cutout"]', 499.00, 899.00, TRUE, TRUE),
+(6, 6, 'Black Panther 3D Relief Armor Case', 'black-panther-3d-relief-armor-case', 'Dual-Layer 3D Textured Polycarbonate & German TPU', 'Tactile 3D embossed geometric honeycomb relief in stealth matte black. Engineered for drop resistance with air-cushioned corners.', '["Deep 3D Tactile Hex Pattern", "Stealth Matte Black Finish", "Air-Cushion Corner Suspension", "Scratch Resistant"]', 499.00, 849.00, TRUE, TRUE)
 ON DUPLICATE KEY UPDATE name=VALUES(name);
 
 -- 7. Product Images
@@ -103,7 +108,10 @@ INSERT INTO product_images (product_id, image_url, alt_text, is_primary, display
 (1, 'assets/images/hero-case-luxury.jpg', 'AeroShield MagSafe Angle', FALSE, 2),
 (2, 'assets/images/product-titan-armor.jpg', 'Titan Armor Drop Defense', TRUE, 1),
 (3, 'assets/images/product-silkytouch-silicone.jpg', 'SilkyTouch Silicone', TRUE, 1),
-(4, 'assets/images/product-heritage-leather.jpg', 'Heritage Vegan Leather', TRUE, 1)
+(4, 'assets/images/product-heritage-leather.jpg', 'Heritage Vegan Leather', TRUE, 1),
+(5, 'assets/images/3d-cases/trending-3d-ferrari-racing-studio.jpg', 'Scuderia 3D Honeycomb Studio', TRUE, 1),
+(5, 'assets/images/3d-cases/trending-3d-ferrari-racing-angle.jpg', 'Scuderia 3D Honeycomb Angle', FALSE, 2),
+(6, 'assets/images/3d-cases/trending-3d-ferrari-racing-angle.jpg', 'Black Panther 3D Armor', TRUE, 1)
 ON DUPLICATE KEY UPDATE product_id=VALUES(product_id);
 
 -- 8. Product Model Compatibility Mappings
@@ -124,7 +132,9 @@ INSERT INTO product_variants (id, product_id, colour_id, sku, additional_price, 
 (2, 1, 2, 'AS-MAG-GRY', 0.00, TRUE),
 (3, 2, 1, 'TA-MIL-BLK', 0.00, TRUE),
 (4, 3, 3, 'ST-SIL-NVY', 0.00, TRUE),
-(5, 4, 1, 'HL-LTH-BLK', 0.00, TRUE)
+(5, 4, 1, 'HL-LTH-BLK', 0.00, TRUE),
+(6, 5, 1, '3D-SCU-RACE', 0.00, TRUE),
+(7, 6, 1, '3D-PAN-ARM', 0.00, TRUE)
 ON DUPLICATE KEY UPDATE sku=VALUES(sku);
 
 -- 10. Initial Inventory
@@ -133,7 +143,9 @@ INSERT INTO inventory (product_variant_id, quantity, low_stock_threshold) VALUES
 (2, 45, 5),
 (3, 35, 5),
 (4, 60, 5),
-(5, 25, 5)
+(5, 25, 5),
+(6, 45, 5),
+(7, 38, 5)
 ON DUPLICATE KEY UPDATE quantity=VALUES(quantity);
 
 -- 11. Initial Discounts

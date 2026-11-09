@@ -14,18 +14,41 @@ const ProductCatalog = (function () {
   };
 
   /**
-   * Fetch active brands from backend API
+   * Fetch active brands from backend API or local verified registry
    */
   async function loadBrands() {
+    // Pre-seed immediately with PHONE_MODELS_DATA registry
+    if (window.PHONE_MODELS_DATA && window.PHONE_MODELS_DATA.brands) {
+      state.brands = [
+        ...window.PHONE_MODELS_DATA.brands,
+        { id: 'apple', name: 'Apple', slug: 'apple', icon: 'bi-apple' },
+        { id: 'oneplus', name: 'OnePlus', slug: 'oneplus', icon: 'bi-phone' },
+        { id: 'google-pixel', name: 'Google Pixel', slug: 'google-pixel', icon: 'bi-google' },
+        { id: 'xiaomi', name: 'Xiaomi', slug: 'xiaomi', icon: 'bi-phone' },
+        { id: 'motorola', name: 'Motorola', slug: 'motorola', icon: 'bi-phone' }
+      ];
+      renderBrandCards();
+      populateBrandDropdowns();
+    }
+
     try {
       const res = await API.get('/brands');
-      if (res && res.success && Array.isArray(res.data)) {
-        state.brands = res.data;
+      if (res && res.success && Array.isArray(res.data) && res.data.length > 0) {
+        const existingSlugs = new Set(res.data.map(b => b.slug));
+        const merged = [...res.data];
+        if (window.PHONE_MODELS_DATA && window.PHONE_MODELS_DATA.brands) {
+          window.PHONE_MODELS_DATA.brands.forEach(b => {
+            if (!existingSlugs.has(b.slug)) {
+              merged.push(b);
+            }
+          });
+        }
+        state.brands = merged;
         renderBrandCards();
         populateBrandDropdowns();
       }
     } catch (err) {
-      console.error('Failed to load brands:', err);
+      console.warn('Using verified local brand registry:', err);
     }
   }
 
@@ -34,15 +57,23 @@ const ProductCatalog = (function () {
    */
   async function loadModels(brandSlug) {
     if (!brandSlug) return;
+
+    // Immediate zero-latency local registry resolution
+    if (window.PHONE_MODELS_DATA && window.PHONE_MODELS_DATA.models && window.PHONE_MODELS_DATA.models[brandSlug]) {
+      state.models = window.PHONE_MODELS_DATA.models[brandSlug];
+      populateModelDropdowns();
+      renderPopularModels();
+    }
+
     try {
       const res = await API.get(`/brands/${brandSlug}/models`);
-      if (res && res.success && Array.isArray(res.data)) {
+      if (res && res.success && Array.isArray(res.data) && res.data.length > 0) {
         state.models = res.data;
         populateModelDropdowns();
         renderPopularModels();
       }
     } catch (err) {
-      console.error('Failed to load models for brand:', brandSlug, err);
+      console.warn('Using verified local phone model registry for brand:', brandSlug);
     }
   }
 
@@ -130,12 +161,15 @@ const ProductCatalog = (function () {
     select.innerHTML = `<option value="">${I18n.t('finder.chooseBrand')}</option>` +
       state.brands.map(b => `<option value="${b.slug}">${b.name}</option>`).join('');
 
-    select.addEventListener('change', (e) => {
+    select.onchange = (e) => {
       const slug = e.target.value;
       if (slug) {
         loadModels(slug);
+        if (window.Trending3DExperience && ['samsung', 'redmi', 'nothing'].includes(slug)) {
+          Trending3DExperience.selectBrand(slug);
+        }
       }
-    });
+    };
   }
 
   function populateModelDropdowns() {
@@ -144,7 +178,15 @@ const ProductCatalog = (function () {
 
     select.disabled = false;
     select.innerHTML = `<option value="">${I18n.t('finder.chooseModel')}</option>` +
-      state.models.map(m => `<option value="${m.slug}">${m.name}</option>`).join('');
+      state.models.map(m => `<option value="${m.slug}" data-id="${m.id}">${m.name}</option>`).join('');
+
+    select.onchange = (e) => {
+      const selectedOption = e.target.selectedOptions[0];
+      const modelId = selectedOption ? Number(selectedOption.dataset.id) : null;
+      if (window.Trending3DExperience && modelId) {
+        Trending3DExperience.selectModel(modelId);
+      }
+    };
   }
 
   /**

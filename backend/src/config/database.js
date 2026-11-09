@@ -106,6 +106,13 @@ async function transaction(callback) {
 }
 
 // In-Memory store for mock fallback
+let phoneData = null;
+try {
+  phoneData = require('../../../frontend/js/phone-models-data');
+} catch (e) {
+  phoneData = null;
+}
+
 const mockStore = {
   brands: [
     { id: 1, name: 'Apple', slug: 'apple', icon: 'bi-apple', display_order: 1, is_active: 1 },
@@ -113,16 +120,46 @@ const mockStore = {
     { id: 3, name: 'OnePlus', slug: 'oneplus', icon: 'bi-phone', display_order: 3, is_active: 1 },
     { id: 4, name: 'Google Pixel', slug: 'google-pixel', icon: 'bi-google', display_order: 4, is_active: 1 },
     { id: 5, name: 'Xiaomi', slug: 'xiaomi', icon: 'bi-phone', display_order: 5, is_active: 1 },
-    { id: 6, name: 'Motorola', slug: 'motorola', icon: 'bi-phone', display_order: 6, is_active: 1 }
+    { id: 6, name: 'Motorola', slug: 'motorola', icon: 'bi-phone', display_order: 6, is_active: 1 },
+    { id: 7, name: 'Redmi', slug: 'redmi', icon: 'bi-lightning-charge', display_order: 7, is_active: 1 },
+    { id: 8, name: 'Nothing', slug: 'nothing', icon: 'bi-circle-half', display_order: 8, is_active: 1 }
   ],
   models: [
-    { id: 101, brand_id: 1, name: 'iPhone 16 Pro Max', slug: 'iphone-16-pro-max', is_popular: 1, is_active: 1 },
-    { id: 102, brand_id: 1, name: 'iPhone 16 Pro', slug: 'iphone-16-pro', is_popular: 1, is_active: 1 },
-    { id: 103, brand_id: 1, name: 'iPhone 15 Pro', slug: 'iphone-15-pro', is_popular: 1, is_active: 1 },
-    { id: 104, brand_id: 1, name: 'iPhone 15', slug: 'iphone-15', is_popular: 1, is_active: 1 },
-    { id: 201, brand_id: 2, name: 'Galaxy S24 Ultra', slug: 'galaxy-s24-ultra', is_popular: 1, is_active: 1 },
-    { id: 301, brand_id: 3, name: 'OnePlus 12', slug: 'oneplus-12', is_popular: 1, is_active: 1 },
-    { id: 401, brand_id: 4, name: 'Pixel 9 Pro', slug: 'pixel-9-pro', is_popular: 1, is_active: 1 }
+    { id: 1, brand_id: 1, name: 'iPhone 16 Pro Max', slug: 'iphone-16-pro-max', is_popular: 1, is_active: 1 },
+    { id: 2, brand_id: 1, name: 'iPhone 16 Pro', slug: 'iphone-16-pro', is_popular: 1, is_active: 1 },
+    { id: 3, brand_id: 1, name: 'iPhone 15 Pro', slug: 'iphone-15-pro', is_popular: 1, is_active: 1 },
+    { id: 4, brand_id: 1, name: 'iPhone 15', slug: 'iphone-15', is_popular: 1, is_active: 1 },
+    { id: 30, brand_id: 3, name: 'OnePlus 12', slug: 'oneplus-12', is_popular: 1, is_active: 1 },
+    { id: 40, brand_id: 4, name: 'Pixel 9 Pro', slug: 'pixel-9-pro', is_popular: 1, is_active: 1 },
+    // Samsung models from phoneData
+    ...(phoneData && phoneData.models && phoneData.models.samsung ? phoneData.models.samsung.map(m => ({
+      id: m.id,
+      brand_id: 2,
+      name: m.name,
+      slug: m.slug,
+      is_popular: 1,
+      is_active: 1
+    })) : [
+      { id: 201, brand_id: 2, name: 'Galaxy S24 Ultra', slug: 'galaxy-s24-ultra', is_popular: 1, is_active: 1 }
+    ]),
+    // Redmi models from phoneData
+    ...(phoneData && phoneData.models && phoneData.models.redmi ? phoneData.models.redmi.map(m => ({
+      id: m.id,
+      brand_id: 7,
+      name: m.name,
+      slug: m.slug,
+      is_popular: 1,
+      is_active: 1
+    })) : []),
+    // Nothing models from phoneData
+    ...(phoneData && phoneData.models && phoneData.models.nothing ? phoneData.models.nothing.map(m => ({
+      id: m.id,
+      brand_id: 8,
+      name: m.name,
+      slug: m.slug,
+      is_popular: 1,
+      is_active: 1
+    })) : [])
   ],
   products: [
     {
@@ -184,6 +221,36 @@ const mockStore = {
       is_active: 1,
       image_url: 'assets/images/product-heritage-leather.jpg',
       stock_quantity: 25
+    },
+    {
+      id: 5,
+      case_type_id: 5,
+      case_type: '3D Tactile Case',
+      name: 'Scuderia Racing 3D Honeycomb Case',
+      slug: 'scuderia-racing-3d-honeycomb-case',
+      material: '3D Tactile Embossed TPU & Honeycomb Shock Shell',
+      description: 'Physical 3D embossed Scuderia shield with Italian tricolor racing stripe and tactile hexagonal honeycomb mesh. Engineered with raised camera bezels and reinforced shock-absorbing bumper edges.',
+      base_price: '499.00',
+      original_price: '899.00',
+      is_featured: 1,
+      is_active: 1,
+      image_url: 'assets/images/3d-cases/trending-3d-ferrari-racing-studio.jpg',
+      stock_quantity: 45
+    },
+    {
+      id: 6,
+      case_type_id: 5,
+      case_type: '3D Tactile Case',
+      name: 'Black Panther 3D Relief Armor Case',
+      slug: 'black-panther-3d-relief-armor-case',
+      material: 'Dual-Layer 3D Textured Polycarbonate & German TPU',
+      description: 'Tactile 3D embossed geometric honeycomb relief in stealth matte black. Engineered for drop resistance with air-cushioned corners.',
+      base_price: '499.00',
+      original_price: '849.00',
+      is_featured: 1,
+      is_active: 1,
+      image_url: 'assets/images/3d-cases/trending-3d-ferrari-racing-angle.jpg',
+      stock_quantity: 38
     }
   ],
   orders: [],
@@ -199,13 +266,23 @@ function executeMockQuery(sql, params) {
     return mockStore.brands;
   }
   if (normalized.includes('select') && normalized.includes('from phone_models')) {
-    if (params.length > 0 && typeof params[0] === 'string') {
-      const brand = mockStore.brands.find(b => b.slug === params[0]);
+    let result = mockStore.models;
+    if (params && params.length > 0 && typeof params[0] === 'string') {
+      const targetSlug = params[0].toLowerCase();
+      const brand = mockStore.brands.find(b => b.slug === targetSlug || b.name.toLowerCase() === targetSlug);
       if (brand) {
-        return mockStore.models.filter(m => m.brand_id === brand.id);
+        result = mockStore.models.filter(m => m.brand_id === brand.id);
       }
     }
-    return mockStore.models;
+    return result.map(m => {
+      const b = mockStore.brands.find(br => br.id === m.brand_id);
+      return {
+        ...m,
+        brand_name: b ? b.name : 'Brand',
+        brand_slug: b ? b.slug : '',
+        cases_count: 12
+      };
+    });
   }
   if (normalized.includes('select') && normalized.includes('from products') && normalized.includes('where p.slug =')) {
     const slug = params[0];

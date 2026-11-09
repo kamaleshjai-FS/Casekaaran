@@ -12,38 +12,78 @@ document.addEventListener('DOMContentLoaded', async () => {
   let selectedQty = 1;
 
   try {
-    const res = await API.get(`/products/${slug}`);
+    let res = null;
+    try {
+      res = await API.get(`/products/${slug}`);
+    } catch (e) {
+      res = null;
+    }
+
     if (res && res.success && res.data) {
       currentProduct = res.data;
       renderDetails(currentProduct);
+    } else if (window.PHONE_MODELS_DATA && window.PHONE_MODELS_DATA.cases3D) {
+      const match = window.PHONE_MODELS_DATA.cases3D.find(c => c.slug === slug);
+      if (match) {
+        const allModels = [
+          ...window.PHONE_MODELS_DATA.models.samsung,
+          ...window.PHONE_MODELS_DATA.models.redmi,
+          ...window.PHONE_MODELS_DATA.models.nothing
+        ];
+        currentProduct = {
+          id: match.id,
+          name: match.name,
+          slug: match.slug,
+          base_price: match.base_price,
+          original_price: match.original_price,
+          material: match.material,
+          description: match.description,
+          case_type: match.series,
+          images: [
+            match.primary_image,
+            match.angle_image,
+            match.real_photo
+          ],
+          compatible_models: allModels,
+          stock: match.stock_quantity
+        };
+        renderDetails(currentProduct);
+      } else {
+        renderDefaultProduct();
+      }
     } else {
-      // High-resolution fallback
-      currentProduct = {
-        id: 1,
-        name: 'AeroShield MagSafe Matte Case',
-        slug: 'aeroshield-magsafe-matte-case',
-        base_price: 699,
-        original_price: 999,
-        material: 'High-Impact Polycarbonate & German TPU Edge Bumper',
-        description: 'Engineered specifically for extreme drop protection with an integrated N52 Neodymium MagSafe magnetic ring. Tested up to 12ft military-grade drops with raised 1.2mm camera bezels to prevent scratches.',
-        case_type: 'MagSafe Matte',
-        images: [
-          'assets/images/product-aeroshield-magsafe.jpg',
-          'assets/images/hero-case-luxury.jpg',
-          'assets/images/product-titan-armor.jpg'
-        ],
-        compatible_models: [
-          { id: 101, name: 'iPhone 16 Pro Max' },
-          { id: 102, name: 'iPhone 16 Pro' },
-          { id: 103, name: 'iPhone 15 Pro' },
-          { id: 201, name: 'Galaxy S24 Ultra' }
-        ],
-        stock: 24
-      };
-      renderDetails(currentProduct);
+      renderDefaultProduct();
     }
   } catch (err) {
     console.error('Error fetching product details:', err);
+    renderDefaultProduct();
+  }
+
+  function renderDefaultProduct() {
+    currentProduct = {
+      id: 1,
+      name: 'AeroShield MagSafe Matte Case',
+      slug: 'aeroshield-magsafe-matte-case',
+      base_price: 699,
+      original_price: 999,
+      material: 'High-Impact Polycarbonate & German TPU Edge Bumper',
+      description: 'Engineered specifically for extreme drop protection with an integrated N52 Neodymium MagSafe magnetic ring. Tested up to 12ft military-grade drops with raised 1.2mm camera bezels to prevent scratches.',
+      case_type: 'MagSafe Matte',
+      images: [
+        'assets/images/product-aeroshield-magsafe.jpg',
+        'assets/images/hero-case-luxury.jpg',
+        'assets/images/product-titan-armor.jpg'
+      ],
+      compatible_models: [
+        { id: 101, name: 'iPhone 16 Pro Max' },
+        { id: 102, name: 'iPhone 16 Pro' },
+        { id: 103, name: 'iPhone 15 Pro' },
+        { id: 201, name: 'Galaxy S24 Ultra' }
+      ],
+      stock: 24
+    };
+    renderDetails(currentProduct);
+  }
   }
 
   function renderDetails(p) {

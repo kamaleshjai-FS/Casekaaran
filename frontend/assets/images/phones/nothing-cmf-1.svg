@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="100%" height="100%">
+  <defs>
+    <radialGradient id="bgGlowCmf" cx="50%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#F5F0E8" />
+      <stop offset="100%" stop-color="#E5DEC9" />
+    </radialGradient>
+    <linearGradient id="cmfBody" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E25C34" />
+      <stop offset="100%" stop-color="#C54823" />
+    </linearGradient>
+    <filter id="shadowCmf" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="16" stdDeviation="12" flood-color="#101B2D" flood-opacity="0.25" />
+    </filter>
+  </defs>
+
+  <rect width="400" height="400" fill="url(#bgGlowCmf)" rx="16" />
+
+  <g filter="url(#shadowCmf)">
+    <!-- CMF Phone 1 Body (Signature CMF Matte Finish) -->
+    <rect x="110" y="50" width="180" height="300" rx="30" fill="url(#cmfBody)" stroke="#9E3514" stroke-width="2" />
+
+    <!-- Exposed Industrial Screws (CMF Modular Signature) -->
+    <circle cx="125" cy="65" r="3.5" fill="#C0C5CE" stroke="#606672" stroke-width="1" />
+    <line x1="123" y1="65" x2="127" y2="65" stroke="#484E59" stroke-width="0.8" />
+    
+    <circle cx="275" cy="65" r="3.5" fill="#C0C5CE" stroke="#606672" stroke-width="1" />
+    <line x1="273" y1="65" x2="277" y2="65" stroke="#484E59" stroke-width="0.8" />
+
+    <circle cx="125" cy="200" r="3.5" fill="#C0C5CE" stroke="#606672" stroke-width="1" />
+    <circle cx="275" cy="200" r="3.5" fill="#C0C5CE" stroke="#606672" stroke-width="1" />
+
+    <circle cx="125" cy="335" r="3.5" fill="#C0C5CE" stroke="#606672" stroke-width="1" />
+
+    <!-- CMF Signature Accessory Dial (Bottom Right) -->
+    <circle cx="265" cy="325" r="16" fill="#1C1F26" stroke="#C0C5CE" stroke-width="2" />
+    <circle cx="265" cy="325" r="10" fill="#2D323E" />
+    <circle cx="265" cy="325" r="4" fill="#0E1015" />
+
+    <!-- Vertical Dual Camera Island (Top Left) -->
+    <rect x="125" y="75" width="34" height="68" rx="17" fill="#181B22" stroke="#2E333F" stroke-width="2" />
+
+    <!-- Top Camera Lens -->
+    <circle cx="142" cy="92" r="11" fill="#0C0E12" stroke="#404655" stroke-width="1.5" />
+    <circle cx="142" cy="92" r="6" fill="#050608" />
+    <circle cx="140" cy="90" r="2.5" fill="#4B90E2" opacity="0.8" />
+
+    <!-- Bottom Camera Lens -->
+    <circle cx="142" cy="126" r="11" fill="#0C0E12" stroke="#404655" stroke-width="1.5" />
+    <circle cx="142" cy="126" r="6" fill="#050608" />
+    <circle cx="140" cy="124" r="2.5" fill="#4B90E2" opacity="0.8" />
+
+    <!-- Flash -->
+    <circle cx="170" cy="92" r="3.5" fill="#FFF2BD" stroke="#B8A76B" stroke-width="0.8" />
+
+    <!-- CMF Brand Wordmark -->
+    <text x="200" y="270" text-anchor="middle" font-family="-apple-system, sans-serif" font-size="9" font-weight="800" fill="#FFFFFF" opacity="0.75" letter-spacing="4">CMF BY NOTHING</text>
+  </g>
+</svg>
