@@ -78,6 +78,36 @@ const ProductCatalog = (function () {
   }
 
   /**
+   * Helper to resolve phone model ID from slug
+   */
+  function getModelIdFromSlug(slug) {
+    if (!slug) return null;
+    const clean = String(slug).toLowerCase().trim();
+    const registry = window.PHONE_MODELS_DATA;
+    if (!registry || !registry.models) return null;
+    for (const b in registry.models) {
+      const found = registry.models[b].find(m => m.slug.toLowerCase() === clean);
+      if (found) return found.id;
+    }
+    return null;
+  }
+
+  /**
+   * Helper to resolve phone model name from ID
+   */
+  function getModelNameFromId(id) {
+    if (!id) return null;
+    const numId = Number(id);
+    const registry = window.PHONE_MODELS_DATA;
+    if (!registry || !registry.models) return null;
+    for (const b in registry.models) {
+      const found = registry.models[b].find(m => Number(m.id) === numId);
+      if (found) return found.name;
+    }
+    return null;
+  }
+
+  /**
    * Get verified local product catalog matching active filters
    */
   function getLocalCatalogProducts(filters = {}) {
@@ -86,12 +116,14 @@ const ProductCatalog = (function () {
 
     // Filter by model ID or slug
     if (filters.phone_model_id || filters.model) {
-      const target = String(filters.phone_model_id || filters.model).toLowerCase();
+      const targetSlug = filters.model ? String(filters.model).toLowerCase().trim() : '';
+      const targetId = filters.phone_model_id ? Number(filters.phone_model_id) : (targetSlug ? getModelIdFromSlug(targetSlug) : null);
+
       list = list.filter(p => {
-        if (p.phone_model_id && String(p.phone_model_id) === target) return true;
-        if (p.phone_model_slug && p.phone_model_slug.toLowerCase() === target) return true;
-        if (p.phone_model_name && p.phone_model_name.toLowerCase().includes(target)) return true;
-        if (p.compatible_models && Array.isArray(p.compatible_models) && p.compatible_models.some(m => m.toLowerCase().includes(target))) return true;
+        if (targetId && p.phone_model_id && Number(p.phone_model_id) === targetId) return true;
+        if (targetSlug && p.phone_model_slug && p.phone_model_slug.toLowerCase() === targetSlug) return true;
+        if (targetSlug && p.phone_model_name && p.phone_model_name.toLowerCase().includes(targetSlug)) return true;
+        if (targetSlug && p.compatible_models && Array.isArray(p.compatible_models) && p.compatible_models.some(m => m.toLowerCase().includes(targetSlug))) return true;
         // Universal 3D cases (Scuderia & Black Panther) match all phone models
         if (p.id === 5 || p.id === 6) return true;
         return false;
@@ -100,19 +132,19 @@ const ProductCatalog = (function () {
 
     // Filter by brand
     if (filters.brand) {
-      const b = filters.brand.toLowerCase();
+      const b = filters.brand.toLowerCase().trim();
       list = list.filter(p => !p.brand_slug || p.brand_slug.toLowerCase() === b || p.id === 5 || p.id === 6);
     }
 
     // Filter by case type
     if (filters.case_type) {
-      const ct = filters.case_type.toLowerCase();
+      const ct = filters.case_type.toLowerCase().trim();
       list = list.filter(p => (p.case_type_slug && p.case_type_slug.toLowerCase() === ct) || (p.case_type && p.case_type.toLowerCase().includes(ct)));
     }
 
     // Filter by search query
     if (filters.search) {
-      const q = filters.search.toLowerCase();
+      const q = filters.search.toLowerCase().trim();
       list = list.filter(p => p.name.toLowerCase().includes(q) || (p.material && p.material.toLowerCase().includes(q)) || (p.phone_model_name && p.phone_model_name.toLowerCase().includes(q)));
     }
 
@@ -132,10 +164,8 @@ const ProductCatalog = (function () {
   async function loadProducts(filters = {}) {
     // 1. Immediately render verified products with zero latency
     const local = getLocalCatalogProducts(filters);
-    if (local && local.length > 0) {
-      state.products = local;
-      renderProductGrid();
-    }
+    state.products = local;
+    renderProductGrid();
 
     // 2. Fetch live updates from backend API
     try {
@@ -148,12 +178,24 @@ const ProductCatalog = (function () {
       if (filters.search) query.append('search', filters.search);
 
       const res = await API.get(`/products?${query.toString()}`);
-      if (res && res.success && Array.isArray(res.data) && res.data.length > 0) {
-        state.products = res.data;
+      if (res && res.success && Array.isArray(res.data)) {
+        if (res.data.length > 0) {
+          // Merge API data with local demo products so demo products are always visible
+          const apiIds = new Set(res.data.map(p => p.id));
+          const apiSlugs = new Set(res.data.map(p => p.slug));
+          const localOnly = local.filter(p => !apiIds.has(p.id) && !apiSlugs.has(p.slug));
+          state.products = [...res.data, ...localOnly];
+        } else if (local.length > 0) {
+          state.products = local;
+        } else {
+          state.products = [];
+        }
         renderProductGrid();
       }
     } catch (err) {
       console.warn('API sync fallback, displaying verified local catalog:', err);
+      state.products = local;
+      renderProductGrid();
     }
   }
 
@@ -256,7 +298,7 @@ const ProductCatalog = (function () {
 
     if (!state.products.length) {
       container.innerHTML = `
-        <div class="col-12 text-center py-5">
+        <div class="col-12 text-center py-5" style="grid-column: 1 / -1;">
           <div style="font-size: 2.5rem; color: var(--color-text-muted); margin-bottom: 12px;"><i class="bi bi-box-seam"></i></div>
           <h5 class="fw-bold" style="font-family: var(--font-display);">No compatible cases found</h5>
           <p class="text-muted" style="font-size: 0.875rem;">Try choosing another phone model or resetting your filters.</p>
@@ -266,7 +308,7 @@ const ProductCatalog = (function () {
       return;
     }
 
-    container.innerHTML = state.products.map((p, idx) => {
+    container.innerHTML = state.products.map((p) => {
       const discountPct = p.original_price > p.base_price 
         ? Math.round(((p.original_price - p.base_price) / p.original_price) * 100) 
         : 0;
@@ -278,8 +320,8 @@ const ProductCatalog = (function () {
             : (p.case_type || 'Custom Fit'));
 
       return `
-        <div class="col reveal-item stagger-${(idx % 4) + 1}">
-          <div class="product-card h-100 d-flex flex-column">
+        <div class="col">
+          <div class="product-card h-100 d-flex flex-column is-visible">
             <div class="product-image-wrap">
               <div class="badge-stack">
                 ${discountPct > 0 ? `<span class="discount-badge">-${discountPct}%</span>` : ''}
@@ -316,6 +358,12 @@ const ProductCatalog = (function () {
                     </button>
                   </div>
                 </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
               </div>
             </div>
           </div>
@@ -371,16 +419,6 @@ const ProductCatalog = (function () {
     return 120;
   }
 
-  function getModelNameFromId(id) {
-    const registry = window.PHONE_MODELS_DATA;
-    if (!registry || !registry.models) return 'Smartphone';
-    for (const b in registry.models) {
-      const found = registry.models[b].find(m => m.id === id);
-      if (found) return found.name;
-    }
-    return 'Smartphone';
-  }
-
   function selectBrand(brandSlug) {
     state.selectedBrand = brandSlug;
     renderBrandCards();
@@ -392,15 +430,18 @@ const ProductCatalog = (function () {
     const params = new URLSearchParams(window.location.search);
     const brand = params.get('brand');
     const model = params.get('model');
+    const phone_model_id = params.get('phone_model_id');
     const search = params.get('search');
+    const sort = params.get('sort');
 
     if (brand) state.selectedBrand = brand;
     if (model) state.selectedModel = model;
     if (search) state.searchQuery = search;
+    if (sort) state.sortBy = sort;
 
     loadBrands();
     if (brand) loadModels(brand);
-    loadProducts({ brand, model, search });
+    loadProducts({ brand, model, phone_model_id, search, sort });
 
     // Listen to language change to re-render texts
     window.addEventListener('languageChanged', () => {

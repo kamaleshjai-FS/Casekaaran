@@ -682,7 +682,7 @@
       const model = document.getElementById('finder-model-select')?.value;
       const modelSelect = document.getElementById('finder-model-select');
       const selectedOpt = modelSelect ? modelSelect.selectedOptions[0] : null;
-      const modelId = selectedOpt ? Number(selectedOpt.dataset.id) : null;
+      const modelId = selectedOpt && selectedOpt.dataset.id ? Number(selectedOpt.dataset.id) : null;
 
       if (!brand) {
         if (typeof API !== 'undefined' && API.toast) {
@@ -693,29 +693,14 @@
         return;
       }
 
-      // Update Catalog Product Grid
-      if (window.ProductCatalog && window.ProductCatalog.loadProducts) {
-        window.ProductCatalog.loadProducts({ brand, model, phone_model_id: modelId });
-      }
-
-      // Update 3D Atelier section
-      if (['samsung', 'redmi', 'nothing'].includes(brand) && window.Trending3DExperience) {
-        Trending3DExperience.selectBrand(brand);
-        if (modelId) {
-          Trending3DExperience.selectModel(modelId);
-        }
-        const el = document.getElementById('trending3d-spotlight') || document.getElementById('trending-3d-experience');
-        if (el) {
-          el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          return;
-        }
-      }
-
+      let targetUrl = `products.html?brand=${encodeURIComponent(brand)}`;
       if (model) {
-        window.location.href = `products.html?brand=${encodeURIComponent(brand)}&model=${encodeURIComponent(model)}`;
-      } else {
-        window.location.href = `products.html?brand=${encodeURIComponent(brand)}`;
+        targetUrl += `&model=${encodeURIComponent(model)}`;
       }
+      if (modelId) {
+        targetUrl += `&phone_model_id=${encodeURIComponent(modelId)}`;
+      }
+      window.location.href = targetUrl;
     }
   </script>
 </body>

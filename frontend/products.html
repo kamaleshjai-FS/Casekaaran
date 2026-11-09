@@ -176,7 +176,7 @@
             <!-- Brand Filter -->
             <div class="mb-3">
               <label class="form-label-custom" data-i18n="product.filterBrand">Smartphone Brand</label>
-              <select id="filter-brand-select" class="form-select form-control-custom" onchange="onBrandChange(this.value, 'filter-model-select')">
+              <select id="filter-brand-select" class="form-select form-control-custom" onchange="onBrandChange(this.value, 'filter-model-select', null, true)">
                 <option value="">All Brands</option>
                 <option value="samsung">Samsung</option>
                 <option value="redmi">Redmi</option>
@@ -312,6 +312,7 @@
       const params = new URLSearchParams(window.location.search);
       const urlBrand = params.get('brand');
       const urlModel = params.get('model');
+      const urlPhoneModelId = params.get('phone_model_id');
 
       if (urlBrand) {
         const brandSel = document.getElementById('filter-brand-select');
@@ -330,12 +331,13 @@
       }
     });
 
-    function onBrandChange(brandSlug, targetSelectId, selectedModelSlug = null) {
+    function onBrandChange(brandSlug, targetSelectId, selectedModelSlug = null, shouldApply = false) {
       const select = document.getElementById(targetSelectId);
       if (!select) return;
 
       if (!brandSlug) {
         select.innerHTML = '<option value="">All Compatible Models</option>';
+        if (shouldApply) applyCurrentFilters();
         return;
       }
 
@@ -348,24 +350,34 @@
       if (selectedModelSlug) {
         select.value = selectedModelSlug;
       }
+
+      if (shouldApply) {
+        applyCurrentFilters();
+      }
     }
 
     function applyCurrentFilters() {
       const brand = document.getElementById('filter-brand-select')?.value;
-      const model = document.getElementById('filter-model-select')?.value;
+      const modelSelect = document.getElementById('filter-model-select');
+      const model = modelSelect?.value;
+      const selectedOpt = modelSelect ? modelSelect.selectedOptions[0] : null;
+      const phone_model_id = selectedOpt && selectedOpt.dataset.id ? Number(selectedOpt.dataset.id) : null;
       const sort = document.getElementById('catalog-sort')?.value;
       const checked = Array.from(document.querySelectorAll('.filter-casetype:checked')).map(cb => cb.value);
       const case_type = checked.length > 0 ? checked[0] : null;
-      ProductCatalog.loadProducts({ brand, model, sort, case_type });
+      ProductCatalog.loadProducts({ brand, model, phone_model_id, sort, case_type });
     }
 
     function applyMobileFilters() {
       const brand = document.getElementById('filter-brand-mobile')?.value;
-      const model = document.getElementById('filter-model-mobile')?.value;
+      const modelSelect = document.getElementById('filter-model-mobile');
+      const model = modelSelect?.value;
+      const selectedOpt = modelSelect ? modelSelect.selectedOptions[0] : null;
+      const phone_model_id = selectedOpt && selectedOpt.dataset.id ? Number(selectedOpt.dataset.id) : null;
       const sort = document.getElementById('catalog-sort')?.value;
       const checked = Array.from(document.querySelectorAll('.filter-casetype-mobile:checked')).map(cb => cb.value);
       const case_type = checked.length > 0 ? checked[0] : null;
-      ProductCatalog.loadProducts({ brand, model, sort, case_type });
+      ProductCatalog.loadProducts({ brand, model, phone_model_id, sort, case_type });
     }
 
     function resetFilters() {
