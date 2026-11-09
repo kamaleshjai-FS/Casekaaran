@@ -3,9 +3,11 @@
  */
 const CONFIG = {
   // Production vs Local fallback
-  API_BASE_URL: window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-    ? 'http://localhost:5000/api'
-    : '/api', // When deployed, reverse-proxy or same origin
+  API_BASE_URL: window.__CASEKAARAN_API_URL__ || (
+    (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+      ? 'http://localhost:5000/api'
+      : '/api' // When deployed to Vercel/Render, reverse-proxy or same origin
+  ),
   DEFAULT_LANG: 'en',
   CURRENCY_SYMBOL: '₹',
   STORAGE_KEYS: {

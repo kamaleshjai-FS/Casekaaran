@@ -9,7 +9,8 @@
     "migrate": "node database/migrate.js",
     "seed": "node database/seed.js",
     "test": "node --test tests/unit/*.test.js tests/integration/*.test.js",
-    "test:load": "node tests/load/k6-load-test.js"
+    "test:load": "node tests/load/k6-load-test.js",
+    "sync:images": "node scripts/sync_images_cloudinary.js"
   },
   "keywords": [
     "casekaaran",
@@ -23,6 +24,7 @@
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "cloudinary": "^2.11.0",
     "compression": "^1.7.5",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
