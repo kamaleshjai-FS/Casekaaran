@@ -31,15 +31,8 @@ const allowedOrigins = [
 
 app.use(cors({
   origin: (origin, callback) => {
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.includes(origin) || process.env.NODE_ENV !== 'production') {
-      return callback(null, true);
-    }
-    // Allow any Vercel preview or production deployment (*.vercel.app)
-    if (origin.endsWith('.vercel.app') || origin.includes('vercel.app')) {
-      return callback(null, true);
-    }
-    callback(new Error('Blocked by CORS policy: ' + origin));
+    // Allow all web clients (Vercel, preview, custom domain, localhost)
+    callback(null, true);
   },
   credentials: true
 }));

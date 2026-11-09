@@ -1,7 +1,7 @@
 {
   "version": 2,
   "rewrites": [
-    { "source": "/api/(.*)", "destination": "https://casekaaran-backend.onrender.com/api/$1" }
+    { "source": "/api/(.*)", "destination": "https://casekaaran.onrender.com/api/$1" }
   ],
   "headers": [
     {

@@ -6,7 +6,7 @@ const CONFIG = {
   API_BASE_URL: window.__CASEKAARAN_API_URL__ || (
     (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
       ? 'http://localhost:5000/api'
-      : '/api' // When deployed to Vercel/Render, reverse-proxy or same origin
+      : 'https://casekaaran.onrender.com/api'
   ),
   DEFAULT_LANG: 'en',
   CURRENCY_SYMBOL: '₹',
