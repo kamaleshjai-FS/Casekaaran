@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>Admin Dashboard — Casekaaran</title>
+  <link rel="icon" href="assets/icons/favicon.ico" type="image/x-icon">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+
+  <div class="admin-layout">
+    <!-- Admin Sidebar -->
+    <aside class="admin-sidebar">
+      <div class="admin-sidebar-header">
+        <i class="bi bi-shield-shaded text-primary fs-3"></i>
+        <div class="brand-title">Casekaaran</div>
+      </div>
+
+      <ul class="admin-nav">
+        <li class="admin-nav-item">
+          <button class="active" data-tab="dashboard">
+            <i class="bi bi-speedometer2"></i> Dashboard
+          </button>
+        </li>
+        <li class="admin-nav-item">
+          <button data-tab="orders">
+            <i class="bi bi-cart-check"></i> Orders & Shipping
+          </button>
+        </li>
+        <li class="admin-nav-item">
+          <button data-tab="products">
+            <i class="bi bi-box-seam"></i> Products CRUD
+          </button>
+        </li>
+        <li class="admin-nav-item">
+          <button data-tab="brands">
+            <i class="bi bi-phone"></i> Brands & Models
+          </button>
+        </li>
+        <li class="admin-nav-item">
+          <button data-tab="inventory">
+            <i class="bi bi-stack"></i> Inventory Stock
+          </button>
+        </li>
+        <li class="admin-nav-item">
+          <button data-tab="discounts">
+            <i class="bi bi-percent"></i> Discounts & Deals
+          </button>
+        </li>
+        <li class="admin-nav-item">
+          <button data-tab="notifications">
+            <i class="bi bi-whatsapp"></i> WhatsApp & Sheets
+          </button>
+        </li>
+      </ul>
+
+      <div class="admin-sidebar-footer">
+        <button class="btn btn-outline-light btn-sm w-100" id="admin-logout-btn">
+          <i class="bi bi-box-arrow-left"></i> Sign Out
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="admin-main">
+      <!-- Topbar -->
+      <header class="admin-topbar">
+        <h5 class="fw-bold mb-0">Store Administration</h5>
+        <div class="d-flex align-items-center gap-3">
+          <button class="btn btn-sm btn-outline-success" onclick="Admin.triggerSheetsSync()">
+            <i class="bi bi-file-earmark-spreadsheet"></i> Sync Google Sheets
+          </button>
+          <a href="index.html" target="_blank" class="btn btn-sm btn-outline-secondary">
+            <i class="bi bi-box-arrow-up-right"></i> View Storefront
+          </a>
+        </div>
+      </header>
+
+      <div class="admin-content-area">
+
+        <!-- TAB 1: DASHBOARD OVERVIEW -->
+        <div class="admin-tab-pane" id="tab-dashboard">
+          <!-- KPI Stat Cards -->
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-icon blue"><i class="bi bi-cart"></i></div>
+              <div class="stat-info">
+                <div class="stat-value" id="stat-total-orders">0</div>
+                <div class="stat-label">Total Orders</div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon green"><i class="bi bi-check-circle"></i></div>
+              <div class="stat-info">
+                <div class="stat-value" id="stat-paid-orders">0</div>
+                <div class="stat-label">Verified Paid</div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon amber"><i class="bi bi-clock-history"></i></div>
+              <div class="stat-info">
+                <div class="stat-value" id="stat-pending-payments">0</div>
+                <div class="stat-label">Pending Payments</div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon blue"><i class="bi bi-currency-rupee"></i></div>
+              <div class="stat-info">
+                <div class="stat-value" id="stat-revenue">₹0</div>
+                <div class="stat-label">Total Revenue</div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon green"><i class="bi bi-phone"></i></div>
+              <div class="stat-info">
+                <div class="stat-value" id="stat-active-products">0</div>
+                <div class="stat-label">Active Products</div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon red"><i class="bi bi-exclamation-triangle"></i></div>
+              <div class="stat-info">
+                <div class="stat-value" id="stat-low-stock">0</div>
+                <div class="stat-label">Low Stock Alerts</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recent Orders Card -->
+          <div class="admin-card">
+            <div class="admin-card-header">
+              <h5 class="fw-bold mb-0">Recent Customer Orders</h5>
+            </div>
+            <div class="admin-table-wrap">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>Order #</th>
+                    <th>Customer</th>
+                    <th>Amount</th>
+                    <th>Payment</th>
+                    <th>Shipping</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="recent-orders-tbody">
+                  <!-- Populated dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 2: ORDERS MANAGEMENT -->
+        <div class="admin-tab-pane" id="tab-orders" style="display: none;">
+          <div class="admin-card">
+            <div class="admin-card-header">
+              <h5 class="fw-bold mb-0">All Customer Orders</h5>
+            </div>
+            <div class="admin-table-wrap">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>Order #</th>
+                    <th>Customer & WhatsApp</th>
+                    <th>Amount</th>
+                    <th>Payment</th>
+                    <th>Order Status</th>
+                    <th>Shipping</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="all-orders-tbody">
+                  <!-- Populated dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 3: PRODUCTS CRUD -->
+        <div class="admin-tab-pane" id="tab-products" style="display: none;">
+          <div class="admin-card">
+            <div class="admin-card-header">
+              <h5 class="fw-bold mb-0">Product Catalog</h5>
+              <button class="btn-ck btn-ck-primary btn-ck-sm" onclick="API.toast('Product CRUD', 'Product add/edit modal ready', 'info')">
+                <i class="bi bi-plus-lg"></i> Add New Case
+              </button>
+            </div>
+            <div class="admin-table-wrap">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Product Name</th>
+                    <th>Case Type</th>
+                    <th>Price</th>
+                    <th>Inventory</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="admin-products-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 4: BRANDS & MODELS -->
+        <div class="admin-tab-pane" id="tab-brands" style="display: none;">
+          <div class="row g-4">
+            <div class="col-md-6">
+              <div class="admin-card">
+                <div class="admin-card-header">
+                  <h6 class="fw-bold mb-0">Supported Brands</h6>
+                </div>
+                <div class="admin-table-wrap">
+                  <table class="admin-table">
+                    <thead><tr><th>ID</th><th>Brand</th><th>Slug</th><th>Status</th></tr></thead>
+                    <tbody id="admin-brands-tbody"></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="admin-card">
+                <div class="admin-card-header">
+                  <h6 class="fw-bold mb-0">Popular Models</h6>
+                </div>
+                <div class="admin-table-wrap">
+                  <table class="admin-table">
+                    <thead><tr><th>ID</th><th>Model</th><th>Slug</th><th>Tag</th></tr></thead>
+                    <tbody id="admin-models-tbody"></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 5: INVENTORY -->
+        <div class="admin-tab-pane" id="tab-inventory" style="display: none;">
+          <div class="admin-card">
+            <div class="admin-card-header">
+              <h5 class="fw-bold mb-0">Inventory & Stock Levels</h5>
+            </div>
+            <div class="admin-table-wrap">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>SKU</th>
+                    <th>Product Variant</th>
+                    <th>Quantity Available</th>
+                    <th>Update</th>
+                  </tr>
+                </thead>
+                <tbody id="admin-inventory-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 6: DISCOUNTS -->
+        <div class="admin-tab-pane" id="tab-discounts" style="display: none;">
+          <div class="admin-card">
+            <div class="admin-card-header">
+              <h5 class="fw-bold mb-0">Scheduled Discount Campaigns</h5>
+              <button class="btn-ck btn-ck-primary btn-ck-sm" onclick="API.toast('Campaigns', 'Create discount form active', 'info')">
+                <i class="bi bi-plus-lg"></i> Create Campaign
+              </button>
+            </div>
+            <div class="admin-table-wrap">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Campaign Name</th>
+                    <th>Discount</th>
+                    <th>Active Window (Server Time)</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="admin-discounts-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 7: NOTIFICATIONS & LOGS -->
+        <div class="admin-tab-pane" id="tab-notifications" style="display: none;">
+          <div class="admin-card">
+            <div class="admin-card-header">
+              <h5 class="fw-bold mb-0">WhatsApp Notification Logs & Google Sheets Sync</h5>
+            </div>
+            <div class="admin-table-wrap">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Order #</th>
+                    <th>Recipient Phone</th>
+                    <th>WhatsApp Template</th>
+                    <th>Delivery Status</th>
+                    <th>Timestamp</th>
+                  </tr>
+                </thead>
+                <tbody id="admin-notifications-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- Explicit Shipping Update Modal -->
+  <div class="ck-modal-backdrop" id="shipping-modal-backdrop">
+    <div class="ck-modal">
+      <div class="ck-modal-header">
+        <h5 class="fw-bold mb-0">Update Order Shipping Status</h5>
+        <button type="button" class="btn-close" onclick="Admin.closeShippingModal()"></button>
+      </div>
+      <div class="ck-modal-body">
+        <p class="text-muted" style="font-size: 0.875rem;">
+          Updating this status will trigger an automated WhatsApp notification to the customer with live tracking info.
+        </p>
+        <div class="mb-3">
+          <label class="form-label-custom">Order Number</label>
+          <div class="fw-bold fs-6 text-primary" id="modal-order-number">CK-XXXX</div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label-custom">New Shipping Status <span class="text-danger">*</span></label>
+          <select id="modal-shipping-status" class="form-select form-control-custom">
+            <option value="NOT_SHIPPED">NOT_SHIPPED</option>
+            <option value="PACKED">PACKED (Triggers WhatsApp "Packed" notice)</option>
+            <option value="SHIPPED">SHIPPED (Triggers WhatsApp with Tracking Link)</option>
+            <option value="OUT_FOR_DELIVERY">OUT_FOR_DELIVERY (Triggers Out for Delivery notice)</option>
+            <option value="DELIVERED">DELIVERED (Triggers Delivered confirmation)</option>
+            <option value="RETURNED">RETURNED</option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label class="form-label-custom">Courier Partner Name</label>
+          <input type="text" id="modal-courier-name" class="form-control-custom" placeholder="e.g. BlueDart, Delhivery, DTDC" />
+        </div>
+        <div class="mb-3">
+          <label class="form-label-custom">Tracking / AWB Number</label>
+          <input type="text" id="modal-tracking-number" class="form-control-custom" placeholder="e.g. BD-89234823" />
+        </div>
+      </div>
+      <div class="ck-modal-footer">
+        <button type="button" class="btn-ck btn-ck-secondary btn-ck-sm" onclick="Admin.closeShippingModal()">Cancel</button>
+        <button type="button" class="btn-ck btn-ck-primary btn-ck-sm" onclick="Admin.confirmShippingUpdate()">
+          <i class="bi bi-whatsapp"></i> Update & Send WhatsApp Notification
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/i18n/en.js"></script>
+  <script src="js/language.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>Product Details — Casekaaran</title>
+  <link rel="icon" href="assets/icons/favicon.ico" type="image/x-icon">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <link rel="stylesheet" href="css/storefront.css">
+</head>
+<body>
+
+  <!-- Announcement Bar -->
+  <aside class="announcement-bar">
+    <div class="container-custom d-flex align-items-center justify-content-center">
+      <span data-i18n="announcement.message">⚡ Festive Special: Flat 20% OFF on all MagSafe & Armor Cases | Free Delivery Nationwide</span>
+    </div>
+  </aside>
+
+  <!-- Navbar -->
+  <header class="navbar-custom">
+    <div class="container-custom d-flex align-items-center justify-content-between">
+      <a href="index.html" class="brand-logo text-decoration-none">
+        <i class="bi bi-shield-shaded text-primary"></i>
+        <span>Casekaaran</span>
+      </a>
+
+      <div class="nav-actions">
+        <div class="lang-selector-group">
+          <button class="lang-btn active" data-lang="en">EN</button>
+          <button class="lang-btn" data-lang="hi">हिन्दी</button>
+        </div>
+        <a href="cart.html" class="nav-icon-btn">
+          <i class="bi bi-bag" style="font-size: 1.25rem;"></i>
+          <span class="cart-badge" style="display: none;">0</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="py-5">
+    <div class="container-custom">
+      <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb" style="font-size: 0.8125rem;">
+          <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+          <li class="breadcrumb-item"><a href="products.html">Cases</a></li>
+          <li class="breadcrumb-item active" aria-current="page" id="pd-breadcrumb">Details</li>
+        </ol>
+      </nav>
+
+      <div class="row g-5">
+        <!-- Gallery Images -->
+        <div class="col-lg-6">
+          <div class="bg-light border rounded-3 p-3 mb-3 text-center" style="min-height: 420px; display: flex; align-items: center; justify-content: center;">
+            <img id="pd-main-image" src="" alt="Case preview" class="img-fluid rounded-3" style="max-height: 480px; object-fit: contain;" />
+          </div>
+          <!-- Thumbnails -->
+          <div class="d-flex gap-2" id="pd-thumbnails"></div>
+        </div>
+
+        <!-- Product Purchase Information -->
+        <div class="col-lg-6">
+          <h1 class="fw-bold mb-2" id="pd-title" style="font-size: 1.85rem; color: var(--color-primary);">Product Name</h1>
+          
+          <div class="d-flex align-items-baseline gap-3 mb-4">
+            <span class="fw-bold fs-3 text-primary" id="pd-price">₹0</span>
+            <span class="text-muted text-decoration-line-through fs-5" id="pd-original-price">₹0</span>
+            <span class="badge bg-danger fs-6" id="pd-discount">0% OFF</span>
+          </div>
+
+          <!-- Compatibility Confirmation Box -->
+          <div class="compat-box mb-4" id="pd-compat-box" style="display: none;"></div>
+
+          <!-- Model Selector -->
+          <div class="mb-4">
+            <label class="form-label-custom" for="pd-model-select">
+              <span data-i18n="product.compatibleModels">Compatible Phone Model</span>
+              <span class="text-danger">*</span>
+            </label>
+            <select id="pd-model-select" class="form-select form-control-custom"></select>
+            <small class="text-muted mt-1 d-block">Select your exact phone model to guarantee precise camera cutout and wireless charging compatibility.</small>
+          </div>
+
+          <!-- Quantity Selector -->
+          <div class="mb-4">
+            <label class="form-label-custom" data-i18n="product.quantity">Quantity</label>
+            <div class="quantity-control">
+              <button class="qty-btn" id="qty-minus" aria-label="Decrease quantity"><i class="bi bi-dash"></i></button>
+              <input type="number" class="qty-input" id="qty-input" value="1" min="1" max="10" readonly />
+              <button class="qty-btn" id="qty-plus" aria-label="Increase quantity"><i class="bi bi-plus"></i></button>
+            </div>
+          </div>
+
+          <!-- Actions -->
+          <div class="d-flex flex-column flex-sm-row gap-3 mb-5">
+            <button class="btn-ck btn-ck-secondary btn-ck-lg flex-fill" id="btn-add-to-cart">
+              <i class="bi bi-bag-plus"></i> <span data-i18n="product.addToCart">Add to Cart</span>
+            </button>
+            <button class="btn-ck btn-ck-primary btn-ck-lg flex-fill" id="btn-buy-now">
+              <i class="bi bi-lightning-charge"></i> <span data-i18n="product.buyNow">Buy Now</span>
+            </button>
+          </div>
+
+          <!-- Product Details Tabs / Accordion -->
+          <div class="border-top pt-4">
+            <h5 class="fw-bold mb-2">Description & Build</h5>
+            <p class="text-muted" id="pd-description" style="font-size: 0.9375rem; line-height: 1.6;"></p>
+            
+            <div class="mt-3">
+              <span class="fw-semibold">Material:</span>
+              <span class="text-muted ms-1" id="pd-material">Shock-resistant Polycarbonate</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer-custom mt-auto">
+    <div class="container-custom text-center text-muted" style="font-size: 0.8125rem;">
+      &copy; 2026 Casekaaran. All rights reserved. <a href="admin-login.html" class="text-muted ms-2">Admin Portal</a>
+    </div>
+  </footer>
+
+  <script src="js/config.js"></script>
+  <script src="js/i18n/en.js"></script>
+  <script src="js/i18n/hi.js"></script>
+  <script src="js/language.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/navigation.js"></script>
+  <script src="js/product-details.js"></script>
+</body>
+</html>

@@ -1,0 +1,98 @@
+/* ==========================================================================
+   CASEKAARAN — DESIGN SYSTEM TOKENS (CSS VARIABLES)
+   ========================================================================== */
+
+:root {
+  /* Brand Colour Palette */
+  --color-primary: #111827;        /* Deep slate/charcoal for primary actions & text */
+  --color-primary-hover: #1f2937;  /* Slightly lighter slate for hover states */
+  --color-secondary: #374151;      /* Mid-tone slate for secondary elements */
+  --color-background: #FFFFFF;     /* Clean pure white background */
+  --color-section-bg: #F8FAFC;     /* Subtle light grey-blue for alternate sections */
+  --color-surface: #FFFFFF;        /* Card & surface background */
+  --color-surface-hover: #F1F5F9;  /* Hover state for table rows & items */
+  
+  /* Borders & Dividers */
+  --color-border-light: #E5E7EB;   /* 1px clean separation borders */
+  --color-border-strong: #D1D5DB;  /* Input borders & interactive controls */
+  --color-border-focus: #2563EB;   /* Input focus ring */
+
+  /* Functional Accents */
+  --color-accent: #2563EB;         /* Vibrant Royal Blue for links, primary CTA */
+  --color-accent-hover: #1D4ED8;   /* Darker blue hover */
+  --color-accent-subtle: #EFF6FF;  /* Light blue tinted badge backgrounds */
+  
+  --color-success: #16A34A;        /* Emerald green for in-stock, paid, confirmed */
+  --color-success-subtle: #ECFDF5; /* Green pill background */
+  --color-success-border: #BBF7D0;
+
+  --color-discount: #DC2626;       /* Crimson red for discount badges, alerts */
+  --color-discount-subtle: #FEF2F2;/* Red pill background */
+  --color-discount-border: #FECACA;
+
+  --color-warning: #D97706;        /* Amber for pending payments, low stock */
+  --color-warning-subtle: #FFFBEB;
+  --color-warning-border: #FDE68A;
+
+  /* Typography Colors */
+  --color-text-main: #111827;      /* High contrast primary text (WCAG AAA) */
+  --color-text-body: #374151;      /* Secondary reading text */
+  --color-text-muted: #6B7280;     /* Captions, labels, timestamps */
+  --color-text-light: #9CA3AF;     /* Inactive placeholders */
+  --color-text-white: #FFFFFF;
+
+  /* Typography Families */
+  --font-en: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-hi: 'Noto Sans Devanagari', 'Inter', -apple-system, sans-serif;
+  --font-family-current: var(--font-en);
+
+  /* Font Weights */
+  --fw-regular: 400;
+  --fw-medium: 500;
+  --fw-semibold: 600;
+  --fw-bold: 700;
+
+  /* Spacing Scale (8px Grid System) */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-20: 80px;
+
+  /* Border Radiuses */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-full: 9999px;
+
+  /* Box Shadows (Subtle, professional elevation) */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+
+  /* Layout Boundaries */
+  --max-width-content: 1240px;
+  --navbar-height: 72px;
+  --announcement-height: 38px;
+
+  /* Transitions */
+  --transition-fast: 150ms ease-in-out;
+  --transition-base: 220ms ease-in-out;
+  --transition-slow: 350ms ease-in-out;
+}
+
+/* Hindi Mode Typography Override */
+body.lang-hi {
+  --font-family-current: var(--font-hi);
+  font-family: var(--font-family-current);
+  letter-spacing: normal;
+  line-height: 1.6;
+}
