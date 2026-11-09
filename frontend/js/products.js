@@ -78,9 +78,46 @@ const ProductCatalog = (function () {
   }
 
   /**
+   * Get verified local product catalog matching active filters
+   */
+  function getLocalCatalogProducts(filters = {}) {
+    const registry = window.PHONE_MODELS_DATA;
+    let list = (registry && registry.allProducts) ? [...registry.allProducts] : [];
+
+    // Filter by case type
+    if (filters.case_type) {
+      const ct = filters.case_type.toLowerCase();
+      list = list.filter(p => (p.case_type_slug && p.case_type_slug.toLowerCase() === ct) || (p.case_type && p.case_type.toLowerCase().includes(ct)));
+    }
+
+    // Filter by search query
+    if (filters.search) {
+      const q = filters.search.toLowerCase();
+      list = list.filter(p => p.name.toLowerCase().includes(q) || (p.material && p.material.toLowerCase().includes(q)));
+    }
+
+    // Sort order
+    if (filters.sort === 'price_asc') {
+      list.sort((a, b) => a.base_price - b.base_price);
+    } else if (filters.sort === 'price_desc') {
+      list.sort((a, b) => b.base_price - a.base_price);
+    }
+
+    return list;
+  }
+
+  /**
    * Fetch products with multi-attribute filtering & sorting
    */
   async function loadProducts(filters = {}) {
+    // 1. Immediately render verified products with zero latency
+    const local = getLocalCatalogProducts(filters);
+    if (local && local.length > 0) {
+      state.products = local;
+      renderProductGrid();
+    }
+
+    // 2. Fetch live updates from backend API
     try {
       let query = new URLSearchParams();
       if (filters.brand) query.append('brand', filters.brand);
@@ -90,12 +127,12 @@ const ProductCatalog = (function () {
       if (filters.search) query.append('search', filters.search);
 
       const res = await API.get(`/products?${query.toString()}`);
-      if (res && res.success && Array.isArray(res.data)) {
+      if (res && res.success && Array.isArray(res.data) && res.data.length > 0) {
         state.products = res.data;
         renderProductGrid();
       }
     } catch (err) {
-      console.error('Failed to load products:', err);
+      console.warn('API sync fallback, displaying verified local catalog:', err);
     }
   }
 

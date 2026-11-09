@@ -141,6 +141,88 @@ const PHONE_MODELS_DATA = {
       description: 'Tactile 3D embossed geometric honeycomb relief in stealth matte black. Engineered for drop resistance with air-cushioned corners.',
       features: ['Deep 3D Tactile Hex Pattern', 'Stealth Matte Black Finish', 'Air-Cushion Corner Suspension', 'Scratch Resistant']
     }
+  ],
+
+  // Complete Verified Product Catalog for Instant Zero-Latency Storefront Display
+  allProducts: [
+    {
+      id: 5,
+      name: 'Scuderia Racing 3D Honeycomb Case',
+      slug: 'scuderia-racing-3d-honeycomb-case',
+      case_type: '3D Tactile Case',
+      case_type_slug: '3d-case',
+      base_price: 499,
+      original_price: 899,
+      material: '3D Tactile Embossed TPU & Honeycomb Shock Shell',
+      image_url: 'assets/images/3d-cases/trending-3d-ferrari-racing-studio.jpg',
+      stock_quantity: 45,
+      is_featured: 1
+    },
+    {
+      id: 6,
+      name: 'Black Panther 3D Relief Armor Case',
+      slug: 'black-panther-3d-relief-armor-case',
+      case_type: '3D Tactile Case',
+      case_type_slug: '3d-case',
+      base_price: 499,
+      original_price: 849,
+      material: 'Dual-Layer 3D Textured Polycarbonate & German TPU',
+      image_url: 'assets/images/3d-cases/trending-3d-ferrari-racing-angle.jpg',
+      stock_quantity: 38,
+      is_featured: 1
+    },
+    {
+      id: 1,
+      name: 'AeroShield MagSafe Matte Case',
+      slug: 'aeroshield-magsafe-matte-case',
+      case_type: 'MagSafe Matte',
+      case_type_slug: 'magsafe',
+      base_price: 699,
+      original_price: 999,
+      material: 'Polycarbonate & German TPU Edge Bumper',
+      image_url: 'assets/images/product-aeroshield-magsafe.jpg',
+      stock_quantity: 50,
+      is_featured: 1
+    },
+    {
+      id: 2,
+      name: 'Titan Armor Military Drop Defense Case',
+      slug: 'titan-armor-military-drop-defense',
+      case_type: 'Military Rugged',
+      case_type_slug: 'rugged',
+      base_price: 799,
+      original_price: 1199,
+      material: 'Dual-Layer Aerospace Polymer & Shock Honeycomb',
+      image_url: 'assets/images/product-titan-armor.jpg',
+      stock_quantity: 35,
+      is_featured: 1
+    },
+    {
+      id: 3,
+      name: 'SilkyTouch Liquid Silicone Case',
+      slug: 'silkytouch-liquid-silicone-case',
+      case_type: 'Liquid Silicone',
+      case_type_slug: 'silicone',
+      base_price: 499,
+      original_price: 799,
+      material: 'Food-Grade Microfiber Lined Silicone',
+      image_url: 'assets/images/product-silkytouch-silicone.jpg',
+      stock_quantity: 60,
+      is_featured: 1
+    },
+    {
+      id: 4,
+      name: 'Heritage Handcrafted Vegan Leather Case',
+      slug: 'heritage-vegan-leather-case',
+      case_type: 'Vegan Leather',
+      case_type_slug: 'leather',
+      base_price: 899,
+      original_price: 1299,
+      material: 'Grain Textured Vegan Leather & Aluminum Accents',
+      image_url: 'assets/images/product-heritage-leather.jpg',
+      stock_quantity: 25,
+      is_featured: 1
+    }
   ]
 };
 

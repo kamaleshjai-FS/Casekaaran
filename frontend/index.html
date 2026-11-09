@@ -678,17 +678,26 @@
     });
 
     function handleFinderSubmit() {
-      const brand = document.getElementById('finder-brand-select').value;
-      const model = document.getElementById('finder-model-select').value;
-      if (['samsung', 'redmi', 'nothing'].includes(brand)) {
-        const el = document.getElementById('trending-3d-experience');
+      const brand = document.getElementById('finder-brand-select')?.value;
+      const model = document.getElementById('finder-model-select')?.value;
+      const modelSelect = document.getElementById('finder-model-select');
+      const selectedOpt = modelSelect ? modelSelect.selectedOptions[0] : null;
+      const modelId = selectedOpt ? Number(selectedOpt.dataset.id) : null;
+
+      if (brand && ['samsung', 'redmi', 'nothing'].includes(brand) && window.Trending3DExperience) {
+        Trending3DExperience.selectBrand(brand);
+        if (modelId) {
+          Trending3DExperience.selectModel(modelId);
+        }
+        const el = document.getElementById('trending3d-spotlight') || document.getElementById('trending-3d-experience');
         if (el) {
-          el.scrollIntoView({ behavior: 'smooth' });
+          el.scrollIntoView({ behavior: 'smooth', block: 'center' });
           return;
         }
       }
+
       if (model) {
-        window.location.href = `products.html?model=${encodeURIComponent(model)}`;
+        window.location.href = `products.html?brand=${encodeURIComponent(brand)}&model=${encodeURIComponent(model)}`;
       } else if (brand) {
         window.location.href = `products.html?brand=${encodeURIComponent(brand)}`;
       } else {
